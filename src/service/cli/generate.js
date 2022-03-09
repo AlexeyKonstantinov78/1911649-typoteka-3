@@ -77,13 +77,13 @@ const generateOffers = (count) => (
 
 module.exports = {
   name: `--generate`,
-  run(args) {
+  async run(args) {
     const [count] = args;
     const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
     if (countOffer <= 1000) {
       const content = JSON.stringify(generateOffers(countOffer));
 
-      fs.writeFile(FILE_NAME, content, (err) => {
+      await fs.writeFile(FILE_NAME, content, (err) => {
         if (err) {
           return console.error(chalk.red(`Can't write data to file...`));
         }
