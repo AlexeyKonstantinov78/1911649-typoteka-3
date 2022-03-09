@@ -2,6 +2,7 @@
 
 const {getRandomInt, shuffle} = require(`../../utils`);
 const fs = require(`fs`);
+const chalk = require(`chalk`);
 
 const DEFAULT_COUNT = 1; // по умолчанию 1 публикация
 const FILE_NAME = `mocks.json`; // назавание файла
@@ -76,21 +77,21 @@ const generateOffers = (count) => (
 
 module.exports = {
   name: `--generate`,
-  run(args) {
+  async run(args) {
     const [count] = args;
     const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
     if (countOffer <= 1000) {
       const content = JSON.stringify(generateOffers(countOffer));
 
-      fs.writeFile(FILE_NAME, content, (err) => {
+      await fs.writeFile(FILE_NAME, content, (err) => {
         if (err) {
-          return console.error(`Can't write data to file...`);
+          return console.error(chalk.red(`Can't write data to file...`));
         }
-        return console.info(`Operation success. File created.`);
+        return console.info(chalk.green(`Operation success. File created.`));
       });
       return true;
     } else {
-      return console.info(`Не больше 1000 публикаций.`);
+      return console.info(chalk.red(`Не больше 1000 публикаций.`));
     }
   }
 };
