@@ -11,7 +11,7 @@ const FILE_TITLES_PATH = `./data/titles.txt`;
 const FILE_SENTENCES_PATH = `./data/sentences.txt`;
 const FILE_CATEGORIES_PATH = `./data/categories.txt`;
 
-async function readFile(path) {
+const readFile = async (path) => {
   try {
     const content = await fs.readFile(path, `utf8`);
     return content.trim().split(`\n`);
