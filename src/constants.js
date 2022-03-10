@@ -9,13 +9,7 @@ const ExitCode = {
   success: 0,
 };
 
-module.exports = {
-  DEFAULT_COMMAND,
-  USER_ARGV_INDEX,
-  ExitCode,
-};
-
-module.exports.HttpCode = {
+const HttpCode = {
   OK: 200,
   CREATED: 201,
   NOT_FOUND: 404,
@@ -24,3 +18,12 @@ module.exports.HttpCode = {
   UNAUTHORIZED: 401,
   BAD_REQUEST: 400,
 };
+
+
+module.exports = {
+  DEFAULT_COMMAND,
+  USER_ARGV_INDEX,
+  ExitCode,
+  HttpCode,
+};
+
