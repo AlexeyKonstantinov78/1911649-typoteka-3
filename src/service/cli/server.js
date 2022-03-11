@@ -30,7 +30,7 @@ const onClientConnect = async (req, res) => {
 
   switch (req.url) {
 
-    case `/`:
+    case `/`: {
       try {
         const fileContent = await fs.readFile(FILE_NAME);
         const mocks = JSON.parse(fileContent);
@@ -41,9 +41,11 @@ const onClientConnect = async (req, res) => {
       }
 
       break;
-    default:
+    }
+    default: {
       sendResponse(res, HttpCode.NOT_FOUND, notFoundMessageText);
       break;
+    }
   }
 };
 
