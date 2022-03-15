@@ -1,0 +1,10 @@
+doctype html
+html(lang="ru")
+  include includes/head.pug
+  body
+    div.wrapper
+      include includes/header.pug
+      block content
+      include includes/footer.pug
+    script(src="js/vendor.js")
+    script(src="js/main.js")
