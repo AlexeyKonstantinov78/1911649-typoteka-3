@@ -3,39 +3,28 @@
 const express = require(`express`);
 const app = express();
 const path = require(`path`);
+const chalk = require(`chalk`);
+
+// роутер
+const offersRoutes = require(`./routes/offers-routes`);
+const myRoutes = require(`./routes/my-routes`);
+const mainRoutes = require(`./routes/main-routes`);
+
+// константы
+const PUBLIC_DIR = `public`;
 const DEFAULT_PORT = 8080;
 
-const chalk = require(`chalk`);
-// роутер
-const articlesRouter = require(`./routes/articles`);
-const muRouter = require(`./routes/my`);
+// статичные передача данныx как стили скрипты шрифты картинки
+app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));
 
 // подключение шаблонизатора pug и каталог директория шаблонов
 app.set(`views`, path.resolve(__dirname, `templates`));
 app.set(`view engine`, `pug`);
 
-app.get(`/`, (req, res) => {
-  res.render(`main`);
-});
+// Подключим созданные маршруты
+app.use(`/offers`, offersRoutes);
+app.use(`/my`, myRoutes);
+app.use(`/`, mainRoutes);
 
-app.use(`/articles`, articlesRouter);
-app.use(`/my`, muRouter);
-
-app.get(`/register`, (req, res) => {
-  res.render(`sign-up`);
-});
-
-app.get(`/login`, (req, res) => {
-  res.render(`login`);
-});
-
-app.get(`/search`, (req, res) => {
-  res.render(`search/search`);
-});
-
-app.get(`/post`, (req, res) => {
-  res.render(`post-detail`);
-});
-
+// run server
 app.listen(DEFAULT_PORT, () => console.log(chalk.green(`Сервер запущен на порту: ${DEFAULT_PORT}`)));
-
