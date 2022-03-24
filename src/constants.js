@@ -4,6 +4,8 @@ const DEFAULT_COMMAND = `--help`;
 
 const USER_ARGV_INDEX = 2;
 
+const MAX_ID_LENGTH = 6;
+
 const ExitCode = {
   error: 1,
   success: 0,
@@ -24,4 +26,5 @@ module.exports = {
   USER_ARGV_INDEX,
   ExitCode,
   HttpCode,
+  MAX_ID_LENGTH
 };
