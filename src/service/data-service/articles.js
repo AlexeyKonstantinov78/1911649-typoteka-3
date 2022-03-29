@@ -35,8 +35,6 @@ class ArticlesService {
   }
 
   update(id, article) {
-    console.log(id);
-    // console.log(article);
     const oldArticles = this._articles
       .find((item) => item.id === id);
 

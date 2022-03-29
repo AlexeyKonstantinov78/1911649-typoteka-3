@@ -5,7 +5,6 @@ const {nanoid} = require(`nanoid`);
 class CommentService {
   constructor(articles) {
     this._articles = articles;
-
   }
 
   create(articleId, comment) {
@@ -16,7 +15,6 @@ class CommentService {
 
     comments.push(newComments);
     return comments;
-    // return this._articles.create();
   }
 
   drop(articleId, commentId) {
