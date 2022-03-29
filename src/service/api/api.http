@@ -55,4 +55,4 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/api/search?query=Борьба с прокрастинацие HTTP/1.1
+GET http://localhost:3000/api/search?query=Борьба с прокрастинацией HTTP/1.1

@@ -7,11 +7,6 @@ class SearchService {
 
   findAll(searchText) {
     const offer = this._offers.filter((item) => item.title == searchText);
-    console.log(offer);
-
-    // if (!offer || offer === undefined) {
-    //   return [];
-    // }
 
     return offer;
   }
