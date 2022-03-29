@@ -9,8 +9,8 @@ class SearchService {
     const offer = this._offers.find((item) => item.title.includes(searchText));
 
     if (!offer || offer === undefined) {
-      return {};
-    };
+      return false;
+    }
 
     return offer;
   }
