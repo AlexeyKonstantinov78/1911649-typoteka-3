@@ -49,7 +49,7 @@ const generateOffers = (count, titles, sentences, categories, comments) => (
     fullText: shuffle(sentences).slice(1, 5).join(` `),
     comments: generateComments(getRandomInt(1, MAX_COMMENTS), comments),
     createdDate: generateDate(),
-    сategory: [categories[getRandomInt(0, categories.length - 1)]],
+    category: [categories[getRandomInt(0, categories.length - 1)]]
   }))
 );
 

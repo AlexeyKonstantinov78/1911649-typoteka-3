@@ -1,10 +1,10 @@
 'use strict';
 
 const DEFAULT_COMMAND = `--help`;
-
 const USER_ARGV_INDEX = 2;
-
 const MAX_ID_LENGTH = 6;
+const API_PREFIX = `/api`;
+
 
 const ExitCode = {
   error: 1,
@@ -26,5 +26,6 @@ module.exports = {
   USER_ARGV_INDEX,
   ExitCode,
   HttpCode,
-  MAX_ID_LENGTH
+  MAX_ID_LENGTH,
+  API_PREFIX
 };
