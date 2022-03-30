@@ -44,7 +44,7 @@ const generateComments = (count, comments) => (
 const generateOffers = (count, titles, sentences, categories, comments) => (
   Array(count).fill({}).map(() => ({
     id: nanoid(MAX_ID_LENGTH),
-    title: [titles[getRandomInt(0, titles.length - 1)]],
+    title: titles[getRandomInt(0, titles.length - 1)],
     announce: shuffle(sentences).slice(1, 5).join(` `),
     fullText: shuffle(sentences).slice(1, 5).join(` `),
     comments: generateComments(getRandomInt(1, MAX_COMMENTS), comments),

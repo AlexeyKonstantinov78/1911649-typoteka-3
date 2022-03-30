@@ -8,9 +8,9 @@ const getMockData = require(`../lib/get-mock-data`);
 
 const {
   CategoryService,
+  CommentService,
   SearchService,
   ArticlesService,
-  CommentService,
 } = require(`../data-service`);
 
 const app = new Router();

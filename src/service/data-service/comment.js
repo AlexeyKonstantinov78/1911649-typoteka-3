@@ -10,6 +10,10 @@ class CommentService {
   create(articleId, comment) {
     const comments = this.findAll(articleId);
 
+    if (!comments) {
+      return false;
+    }
+
     const newComments = Object
       .assign({id: nanoid(MAX_ID_LENGTH)}, comment);
 
@@ -18,23 +22,34 @@ class CommentService {
   }
 
   drop(articleId, commentId) {
+
     const comment = this.findOne(commentId, articleId);
 
     if (!comment) {
-      return !!comment;
+      return false;
     }
 
     return !!comment;
   }
 
   findAll(articleId) {
-    return this._articles.find((item) => item.id === articleId).comments;
+    const article = this._articles.find((item) => item.id === articleId);
+
+    if (!article) {
+      return false;
+    }
+
+    return article.comments;
   }
 
   findOne(id, articleId) {
-    const article = this._articles.find((item) => item.id === articleId).comments;
+    const article = this._articles.find((item) => item.id === articleId);
 
-    return article.find((item) => item.id === id);
+    if (!article) {
+      return false;
+    }
+
+    return article.comments.find((item) => item.id === id);
   }
 }
 

@@ -38,6 +38,10 @@ class ArticlesService {
     const oldArticles = this._articles
       .find((item) => item.id === id);
 
+    if (!oldArticles) {
+      return false;
+    }
+
     return Object.assign(oldArticles, article);
   }
 }
