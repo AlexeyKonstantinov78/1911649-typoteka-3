@@ -7,9 +7,9 @@
     "test": "npm run eslint && npm run jest",
     "jest": "npm run jest",
     "eslint": "eslint --ext .js src/",
-    "start": "node ./src/service/service.js",
-    "start.dev": "nodemon ./src/service/service.js",
-    "start-front-server": "nodemon ./src/express/express.js"
+    "start": "chcp.com 65001 && node ./src/service/service.js",
+    "start.dev": "chcp.com 65001 && nodemon ./src/service/service.js",
+    "start-front-server": "chcp.com 65001 && nodemon ./src/express/express.js"
   },
   "repository": {
     "type": "git",
