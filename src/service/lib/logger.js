@@ -4,7 +4,7 @@ const pino = require(`pino`);
 
 const logger = pino({
   name: `base-logger`,
-  level: `info`,
+  level: process.env.LOG_LEVEL || `info`,
   prettyPrint: true
 });
 
