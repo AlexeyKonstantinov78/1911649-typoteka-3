@@ -11,6 +11,11 @@ const ExitCode = {
   success: 0,
 };
 
+const Env = {
+  DEVELOPMENT: `development`,
+  PRODUCTION: `production`
+};
+
 const HttpCode = {
   OK: 200,
   CREATED: 201,
@@ -27,5 +32,6 @@ module.exports = {
   ExitCode,
   HttpCode,
   MAX_ID_LENGTH,
-  API_PREFIX
+  API_PREFIX,
+  Env
 };

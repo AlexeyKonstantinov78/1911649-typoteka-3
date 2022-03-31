@@ -73,6 +73,11 @@ module.exports = (app, articlesService, commentService) => {
     const {articleId} = req.params;
     const comments = commentService.findAll(articleId);
 
+    if(!comments) {
+      return res.status(HttpCode.NOT_FOUND)
+        .send(`Not found ${articleId}`);
+    }
+
     res.status(HttpCode.OK)
     .json(comments);
   });
@@ -80,6 +85,11 @@ module.exports = (app, articlesService, commentService) => {
   route.post(`/:articleId/comments`, commentValidator, (req, res) => {
     const {articleId} = req.params;
     const comment = commentService.create(articleId, req.body);
+
+    if(!comment) {
+      return res.status(HttpCode.NOT_FOUND)
+        .send(`Not found ${articleId}`);
+    }
 
     return res.status(HttpCode.CREATED)
       .json(comment);
@@ -89,7 +99,7 @@ module.exports = (app, articlesService, commentService) => {
     const {articleId, commentId} = req.params;
 
     const comment = commentService.findOne(commentId, articleId);
-    console.log('comment: ', comment);
+
     if(!comment) {
       return res.status(HttpCode.NOT_FOUND)
         .send(`Not found`);
