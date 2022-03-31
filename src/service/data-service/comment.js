@@ -25,11 +25,7 @@ class CommentService {
 
     const comment = this.findOne(commentId, articleId);
 
-    if (!comment) {
-      return false;
-    }
-
-    return !!comment;
+    return Boolean(comment);
   }
 
   findAll(articleId) {
