@@ -14,6 +14,17 @@ const mainRoutes = require(`./routes/main-routes`);
 const PUBLIC_DIR = `public`;
 const DEFAULT_PORT = 8080;
 
+const {getLogger} = require(`../service/lib/logger`);
+const logger = getLogger({name: `api http`});
+
+app.use((req, res, next) => {
+  logger.debug(`Request on route ${req.url}`);
+  res.on(`finish`, () => {
+    logger.info(`Response status code ${res.statusCode}`);
+  });
+  next();
+});
+
 // статичные передача данныx как стили скрипты шрифты картинки
 app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));
 
@@ -27,4 +38,4 @@ app.use(`/my`, myRoutes);
 app.use(`/`, mainRoutes);
 
 // run server
-app.listen(DEFAULT_PORT, () => console.log(chalk.green(`Сервер запущен на порту: ${DEFAULT_PORT}`)));
+app.listen(DEFAULT_PORT, () => logger.info(`Сервер запущен на порту: ${DEFAULT_PORT}`));
