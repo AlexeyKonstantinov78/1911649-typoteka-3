@@ -12,6 +12,10 @@ myRouter.get(`/`, async (req, res) => {
   res.render(`./post/articles-by-category`, {offers, categorys});
 });
 
-myRouter.get(`/comments`, (req, res) => res.send(`/my/comments`));
+myRouter.get(`/comments`, async (req, res) => {
+  const offers = await api.getOffers();
+  console.log({offers: offers.slice(0, 3)});
+  res.render(`./post/comments`, {offers: offers.slice(0, 3)});
+});
 
 module.exports = myRouter;
