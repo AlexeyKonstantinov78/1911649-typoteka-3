@@ -5,7 +5,7 @@ block content
     section
       .popup.popup--new-publication.popup--anti
         .new-publication
-          form(action='#' method='POST')
+          form(action='/articles/add' method='POST' enctype="multipart/form-data" autocomplete="off")
             .new-publication__header
               h1 Новая публикация
               .new-publication__date-form
@@ -29,11 +29,14 @@ block content
                       input.visually-hidden(type='file' name='upload')
                       | Обзор
                 .new-publication__category-wrapper
-                  a.new-publication__form-link.button.button--transparent(href='#') Добавить категорию
+                  select#a.new-publication__form-link.button.button--transparent(name="category" data-label="Добавить категорию" )
+                    a.new-publication__form-link.button.button--transparent(href='#') Добавить категорию
+                      each category, index in categorys
+                        option(value=category) #{category}
               .form__wrapper.form__wrapper--text
                 .form__field.form__field--publication-text
                   label
                     textarea(rows='5' name='announcement' placeholder='Анонс публикации')
                 .form__field.form__field--publication-text
                   label
-                    textarea(rows='10' name='full-text' placeholder='Полный текст публикации')
+                    textarea(rows='10' name='fullText' placeholder='Полный текст публикации')

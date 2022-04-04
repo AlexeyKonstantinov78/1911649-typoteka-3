@@ -9,8 +9,9 @@
     "eslint": "eslint --ext .js src/",
     "start": "chcp.com 65001 && cross-env LOG_LEVEL=error node ./src/service/service.js",
     "start.dev": "cross-env LOG_LEVEL=info NODE_ENV=production node ./src/service/service.js --server",
-    "start::debug": "cross-env LOG_LEVEL=info NODE_ENV=development nodemon ./src/service/service.js --server",
-    "start-front-server": "chcp.com 65001 && nodemon ./src/express/express.js"
+    "start::debug": "chcp.com 65001 && cross-env LOG_LEVEL=debug NODE_ENV=development nodemon ./src/service/service.js --server",
+    "start-front-server": "chcp.com 65001 && nodemon ./src/express/express.js",
+    "start-front-server::debug": "chcp.com 65001 && cross-env LOG_LEVEL=debug NODE_ENV=development nodemon ./src/express/express.js"
   },
   "repository": {
     "type": "git",
@@ -31,9 +32,11 @@
     "supertest": "6.2.2"
   },
   "dependencies": {
+    "axios": "0.20.0",
     "chalk": "4.1.2",
     "cross-env": "7.0.3",
     "express": "4.17.3",
+    "multer": "1.4.2",
     "nanoid": "3.3.1",
     "pino": "7.9.2",
     "pino-pretty": "7.6.0",
