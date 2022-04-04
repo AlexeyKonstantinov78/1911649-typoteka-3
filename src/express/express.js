@@ -3,6 +3,7 @@
 const express = require(`express`);
 const app = express();
 const path = require(`path`);
+
 const chalk = require(`chalk`);
 
 // роутер
@@ -12,6 +13,7 @@ const mainRoutes = require(`./routes/main-routes`);
 
 // константы
 const PUBLIC_DIR = `public`;
+const UPLOAD_DIR = `upload`;
 const DEFAULT_PORT = 8080;
 
 const {getLogger} = require(`../service/lib/logger`);
@@ -27,6 +29,8 @@ app.use((req, res, next) => {
 
 // статичные передача данныx как стили скрипты шрифты картинки
 app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));
+app.use(express.static(path.resolve(__dirname, UPLOAD_DIR)));
+// app.use(express.json());
 
 // подключение шаблонизатора pug и каталог директория шаблонов
 app.set(`views`, path.resolve(__dirname, `templates`));
