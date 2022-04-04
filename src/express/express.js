@@ -33,7 +33,7 @@ app.set(`views`, path.resolve(__dirname, `templates`));
 app.set(`view engine`, `pug`);
 
 // Подключим созданные маршруты
-app.use(`/offers`, offersRoutes);
+app.use(`/articles`, offersRoutes);
 app.use(`/my`, myRoutes);
 app.use(`/`, mainRoutes);
 

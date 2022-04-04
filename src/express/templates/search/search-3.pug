@@ -1,5 +1,2 @@
-div.search.search-page__form
-  form(action="#" method="get")
-    label: input(type="text" placeholder="Что ищем?" value="Путешествия" name="query")
-    button.search__button.button.button--transparent(type="submit") Найти
-p.search-page__empty Ничего не нашлось
+if results.length === 0 && query
+  p.search-page__empty По "#{query}" Ничего не нашлось
