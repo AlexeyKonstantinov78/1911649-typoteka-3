@@ -16,18 +16,17 @@ CREATE TABLE articles(
   id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   title varchar(255) NOT NULL,
   description text NOT NULL,
-  sum integer NOT NULL,
-  type varchar(5) NOT NULL,
+  fullText varchar(255) NOT NULL,
+  created_at timestamp DEFAULT current_timestamp,
   picture varchar(50) NOT NULL,
   user_id integer NOT NULL,
-  created_at timestamp DEFAULT current_timestamp,
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE comments(
   id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   text text NOT NULL,
-  created_at timestamp NOT NULL,
+  created_at timestamp DEFAULT current_timestamp,
   article_id integer NOT NULL,
   user_id integer NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id),
