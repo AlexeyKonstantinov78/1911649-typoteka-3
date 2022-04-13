@@ -16,7 +16,7 @@ CREATE TABLE articles(
   id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   title varchar(255) NOT NULL,
   description text NOT NULL,
-  fullText varchar(255) NOT NULL,
+  fullText text NOT NULL,
   created_at timestamp DEFAULT current_timestamp,
   picture varchar(50) NOT NULL,
   user_id integer NOT NULL,
