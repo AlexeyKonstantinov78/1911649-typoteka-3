@@ -7,11 +7,11 @@
     "test": "npm run eslint && npm run jest",
     "jest": "npm run jest",
     "eslint": "eslint --ext .js src/",
-    "start": "chcp.com 65001 && cross-env LOG_LEVEL=error node ./src/service/service.js",
-    "start.dev": "cross-env LOG_LEVEL=info NODE_ENV=production node ./src/service/service.js --server",
-    "start::debug": "chcp.com 65001 && cross-env LOG_LEVEL=debug NODE_ENV=development nodemon ./src/service/service.js --server",
-    "start-front-server": "chcp.com 65001 && nodemon ./src/express/express.js",
-    "start-front-server::debug": "chcp.com 65001 && cross-env LOG_LEVEL=debug NODE_ENV=development nodemon ./src/express/express.js"
+    "start": "chcp.com 65001 && cross-env LOG_LEVEL=error node -r dotenv/config ./src/service/service.js",
+    "start.dev": "cross-env LOG_LEVEL=info NODE_ENV=production node -r dotenv/config ./src/service/service.js --server",
+    "start::debug": "chcp.com 65001 && cross-env LOG_LEVEL=debug NODE_ENV=development nodemon -r dotenv/config ./src/service/service.js --server",
+    "start-front-server": "chcp.com 65001 && nodemon -r dotenv/config ./src/express/express.js",
+    "start-front-server::debug": "chcp.com 65001 && cross-env LOG_LEVEL=debug NODE_ENV=development nodemon -r dotenv/config ./src/express/express.js"
   },
   "repository": {
     "type": "git",
