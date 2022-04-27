@@ -72,7 +72,7 @@ module.exports = {
       });
     } catch (err) {
       logger.error(`Произошла ошибка ${err.message}`);
-      process.exit(1);
+      process.exit(ExitCode.error);
     }
   }
 };
