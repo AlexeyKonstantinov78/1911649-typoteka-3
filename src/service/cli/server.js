@@ -5,11 +5,11 @@ const app = express();
 const chalk = require(`chalk`);
 const {getLogger} = require(`../lib/logger`);
 const logger = getLogger({name: `api`});
-
-
 const {HttpCode, API_PREFIX} = require(`../../constants`);
 const routes = require(`../api`);
 const getMockData = require(`../lib/get-mock-data`);
+// импортируем модуль, созданный на предыдущем шаге
+const sequelize = require(`../lib/sequelize`);
 
 const DEFAULT_PORT = 3000;
 
@@ -46,10 +46,20 @@ app.use((err, _req, _res, _next) => {
 
 module.exports = {
   name: `--server`,
-  run(args) {
+  async run(args) {
 
     const [customPort] = args;
     const port = Number.parseInt(customPort, 10) || DEFAULT_PORT;
+
+    try {
+      logger.info(`Попытка подключиться к базе данных...`);
+      await sequelize.authenticate();
+    } catch (err) {
+      logger.error(`Произошла ошибка: ${err.message}`);
+      process.exit(1);
+    }
+
+    logger.info(`Установлено соединение с базой данных`);
 
     try {
       app
