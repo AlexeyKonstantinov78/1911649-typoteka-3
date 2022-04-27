@@ -5,7 +5,7 @@ const app = express();
 const chalk = require(`chalk`);
 const {getLogger} = require(`../lib/logger`);
 const logger = getLogger({name: `api`});
-const {HttpCode, API_PREFIX} = require(`../../constants`);
+const {HttpCode, API_PREFIX, ExitCode} = require(`../../constants`);
 const routes = require(`../api`);
 const getMockData = require(`../lib/get-mock-data`);
 // импортируем модуль, созданный на предыдущем шаге
@@ -56,7 +56,7 @@ module.exports = {
       await sequelize.authenticate();
     } catch (err) {
       logger.error(`Произошла ошибка: ${err.message}`);
-      process.exit(1);
+      process.exit(ExitCode.error);
     }
 
     logger.info(`Установлено соединение с базой данных`);
