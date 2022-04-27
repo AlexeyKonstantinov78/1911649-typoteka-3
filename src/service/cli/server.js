@@ -56,7 +56,7 @@ module.exports = {
       await sequelize.authenticate();
     } catch (err) {
       logger.error(`Произошла ошибка: ${err.message}`);
-      process.exit(ExitCode.error);
+      process.exit(ExitCode.ERROR);
     }
 
     logger.info(`Установлено соединение с базой данных`);
@@ -72,7 +72,7 @@ module.exports = {
       });
     } catch (err) {
       logger.error(`Произошла ошибка ${err.message}`);
-      process.exit(ExitCode.error);
+      process.exit(ExitCode.ERROR);
     }
   }
 };
