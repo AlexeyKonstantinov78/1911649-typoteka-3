@@ -7,17 +7,17 @@ class Article extends Model {}
 const define = (sequelize) => Article.init({
   title: {
     // eslint-disable-next-line new-cap
-    type: DataTypes.STRING(250),
+    type: DataTypes.STRING(1000),
     allowNull: false
   },
-  description: {
+  announce: {
     // Можно воспользоваться скобочной нотацией:
     // type: DataTypes[STRING](1000)
     // eslint-disable-next-line new-cap
-    type: DataTypes.STRING(250),
+    type: DataTypes.STRING(1000),
     allowNull: false
   },
-  fulltext: {
+  fullText: {
     // eslint-disable-next-line new-cap
     type: DataTypes.STRING(1000),
     allowNull: false
