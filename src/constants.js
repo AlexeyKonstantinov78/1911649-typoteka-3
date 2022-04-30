@@ -7,8 +7,8 @@ const API_PREFIX = `/api`;
 
 
 const ExitCode = {
-  error: 1,
-  success: 0,
+  ERROR: 1,
+  SUCCESS: 0,
 };
 
 const Env = {
