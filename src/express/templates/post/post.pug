@@ -31,8 +31,8 @@ block content
                 .new-publication__category-wrapper
                   select#a.new-publication__form-link.button.button--transparent(name="category" data-label="Добавить категорию" )
                     a.new-publication__form-link.button.button--transparent(href='#') Добавить категорию
-                      each category, index in categorys
-                        option(value=category) #{category}
+                      each category of categories
+                        option(value=category.id) #{category.name}
               .form__wrapper.form__wrapper--text
                 .form__field.form__field--publication-text
                   label

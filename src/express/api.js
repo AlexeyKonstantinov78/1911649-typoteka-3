@@ -23,8 +23,8 @@ class API {
     return response.data;
   }
 
-  getOffers() {
-    return this._load(`/articles`);
+  getOffers({comments}) {
+    return this._load(`/articles`, {params: {comments}});
   }
 
   getOffer(id) {

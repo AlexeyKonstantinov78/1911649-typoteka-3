@@ -34,8 +34,9 @@ block content
                           | Обзор
                   .new-publication__category-wrapper
                     select#a.new-publication__form-link.button.button--transparent(name="category" data-label="Выбрать категорию публикации" )
-                      each category, index in categories
-                        option(value=index selected=offer.category.includes(category)) #{category}
+                      each category of categories
+                        //- option(value=index selected=offer.category.includes(category)) #{category.name}
+                        option(value=category.id) #{category.name}
                 .form__wrapper.form__wrapper--text
                   .form__field.form__field--publication-text
                     label
