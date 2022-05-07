@@ -39,7 +39,12 @@ offersRouter.get(`/add`, async (req, res) => {
   res.render(`./post/post`, {categorys});
 });
 
-offersRouter.get(`/:id`, (req, res) => res.send(`/articles/:id`));
+offersRouter.get(`/:id`, async (req, res) => {
+  const {id} = req.params;
+  const offer = await api.getOffer(id, true);
+
+  res.render(`./post/post-detail`, {offer});
+});
 
 offersRouter.post(`/add`,
   upload.single(`avatar`), // применяем middleware
