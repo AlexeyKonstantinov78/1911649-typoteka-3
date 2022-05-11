@@ -2,11 +2,24 @@
 
 const express = require(`express`);
 const request = require(`supertest`);
+const Sequelize = require(`sequelize`);
+const initDB = require(`../lib/init-db`);
 const {HttpCode} = require(`../../constants`);
 
 const articles = require(`./articles`);
 const DataService = require(`../data-service/articles`);
 const CommentService = require(`../data-service/comment`);
+
+
+const mockCategories = [
+  `Деревья`,
+  `Без рамки`,
+  `Кино`,
+  `Программирование`,
+  `За жизнь`,
+  `Железо`,
+  `IT`
+];
 
 const mockData = [{
   "id": "aYnqTV",
@@ -86,15 +99,22 @@ const mockData = [{
   "category": ["Кино"]
 }];
 
-const createAPI = () => {
+const createAPI = async () => {
+  const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
+  await initDB(mockDB, {categories: mockCategories, articles: mockData});
+
   const app = express();
-  const cloneData = JSON.parse(JSON.stringify(mockData));
   app.use(express.json());
+  const cloneData = JSON.parse(JSON.stringify(mockData));
+
   articles(app, new DataService(cloneData), new CommentService(cloneData));
   return app;
 };
 
+
+
 describe(`API returns a list of all articles`, () => {
+
   let response;
 
   beforeAll(async () => {
@@ -111,18 +131,18 @@ describe(`API returns a list of all articles`, () => {
 });
 
 describe(`API returns an articles with given id`, () => {
-  const app = createAPI();
 
   let response;
 
   beforeAll(async () => {
+    const app = await createAPI();
     response = await request(app)
-      .get(`/articles/aYnqTV`);
+      .get(`/articles/1`);
   });
 
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
 
-  test(`Offer's title is "Куплю антиквариат"`, () => expect(response.body.title).toBe(`Что такое золотое сечение`));
+  test(`Offer's title is "Что такое золотое сечение"`, () => expect(response.body.title).toBe(`Что такое золотое сечение`));
 });
 
 describe(`API creates an article if data is valid`, () => {
@@ -135,11 +155,11 @@ describe(`API creates an article if data is valid`, () => {
       "Без рубрики"
     ]};
 
-  const app = createAPI();
-
   let response;
+  let app;
 
   beforeAll(async () => {
+    app = await createAPI();
     response = await request(app)
       .post(`/articles`)
       .send(newArticle);
@@ -165,7 +185,11 @@ describe(`API refuses to create an articles if data is invalid`, () => {
     sum: 100500
   };
 
-  const app = createAPI();
+  let app;
+
+  beforeAll(async () => {
+    app = await createAPI();
+  });
 
   test(`Without any required property response code is 400`, async () => {
     for (const key of Object.keys(newArticles)) {
@@ -191,11 +215,11 @@ describe(`API changes existent article`, () => {
       ]
     };
 
-  const app = createAPI();
-
+  let app;
   let response;
 
   beforeAll(async () => {
+    app = await createAPI();
     response = await request(app)
       .put(`/articles/oHfTeu`)
       .send(newOffer);
@@ -209,8 +233,8 @@ describe(`API changes existent article`, () => {
   );
 });
 
-test(`API returns status code 404 when trying to change non-existent articles`, () => {
-  const app = createAPI();
+test(`API returns status code 404 when trying to change non-existent articles`, async () => {
+  const app = await createAPI();
 
   const validOffer = {
     "title": "Новая публикация2",
@@ -228,8 +252,8 @@ test(`API returns status code 404 when trying to change non-existent articles`, 
     .expect(HttpCode.NOT_FOUND);
 });
 
-test(`API returns status code 400 when trying to change an articles with invalid data`, () => {
-  const app = createAPI();
+test(`API returns status code 400 when trying to change an articles with invalid data`, async () => {
+  const app = await createAPI();
 
   const invalidOffer = {
     category: `Это`,
@@ -246,11 +270,12 @@ test(`API returns status code 400 when trying to change an articles with invalid
 });
 
 describe(`API correctly deletes an articles`, () => {
-  const app = createAPI();
 
+  let app;
   let response;
 
   beforeAll(async () => {
+    app = await createAPI();
     response = await request(app)
       .delete(`/articles/aYnqTV`);
   });
@@ -265,32 +290,32 @@ describe(`API correctly deletes an articles`, () => {
   );
 });
 
-test(`API refuses to delete non-existent articles`, () => {
-  const app = createAPI();
+test(`API refuses to delete non-existent articles`, async () => {
+  const app = await createAPI();
 
   return request(app)
     .delete(`/articles/NOEXST`)
     .expect(HttpCode.NOT_FOUND);
 });
 
-test(`Status code 200 article comments`, () => {
-  const app = createAPI();
+test(`Status code 200 article comments`, async () => {
+  const app = await createAPI();
 
   return request(app)
     .get(`/articles/caenj9/comments/`)
     .expect(HttpCode.OK);
 });
 
-test(`Status code 404 not found article comments`, () => {
-  const app = createAPI();
+test(`Status code 404 not found article comments`, async () => {
+  const app = await createAPI();
 
   return request(app)
     .get(`/articles/caenj/comments/`)
     .expect(HttpCode.NOT_FOUND);
 });
 
-test(`API refuses to create a comment to non-existent article and returns status code 404`, () => {
-  const app = createAPI();
+test(`API refuses to create a comment to non-existent article and returns status code 404`, async () => {
+  const app = await createAPI();
 
   return request(app)
     .post(`/articles/NOEXST/comments`)
@@ -300,8 +325,8 @@ test(`API refuses to create a comment to non-existent article and returns status
     .expect(HttpCode.NOT_FOUND);
 });
 
-test(`API refuses to delete non-existent comment`, () => {
-  const app = createAPI();
+test(`API refuses to delete non-existent comment`, async () => {
+  const app = await createAPI();
 
   return request(app)
     .delete(`/articles/aYnqTV/comments/dfgfgd`)

@@ -2,10 +2,23 @@
 
 const express = require(`express`);
 const request = require(`supertest`);
-const {HttpCode} = require(`../../constants`);
+const Sequelize = require(`sequelize`);
 
+const initDB = require(`../lib/init-db`);
 const category = require(`./category`);
 const DataService = require(`../data-service/category`);
+
+const {HttpCode} = require(`../../constants`);
+
+const mockCategories = [
+  `Деревья`,
+  `Без рамки`,
+  `Кино`,
+  `Программирование`,
+  `За жизнь`,
+  `Железо`,
+  `IT`
+];
 
 const mockData = [{
   "id": "BDp1-D",
@@ -155,9 +168,17 @@ const mockData = [{
   "category": ["IT"]
 }];
 
+const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
+
 const app = express();
 app.use(express.json());
-category(app, new DataService(mockData));
+
+beforeAll(async () => {
+  await initDB(mockDB, {categories: mockCategories, articles: mockData});
+  category(app, new DataService(mockDB));
+});
+
+// category(app, new DataService(mockData));
 
 describe(`API returns category list`, () => {
 
@@ -165,13 +186,13 @@ describe(`API returns category list`, () => {
 
   beforeAll(async () => {
     response = await request(app)
-      .get(`/categories`);
+      .get(`/category`);
   });
 
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
 
   test(`Returns list of 3 categories`, () => expect(response.body.length).toBe(7));
 
-  test(`Category names are "Журналы", "Игры", "Животные"`, () => expect(response.body).toEqual(expect.arrayContaining(["Деревья", "Без рамки", "Кино", "Программирование", "За жизнь", "Железо", "IT"])));
+  test(`Category names are "Деревья", "Без рамки", "Кино", "Программирование", "За жизнь", "Железо", "IT"`, () => expect(response.body).toEqual(expect.arrayContaining(["Деревья", "Без рамки", "Кино", "Программирование", "За жизнь", "Железо", "IT"])));
 
 });
