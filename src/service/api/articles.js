@@ -11,11 +11,16 @@ module.exports = (app, articlesService, commentService) => {
   app.use(`/articles`, route);
 
   route.get(`/`, async (req, res) => {
-    const {comments} = req.query;
+    const {article, limit, comments} = req.query;
 
-    const articles = await articlesService.findAll(comments);
-    res.status(HttpCode.OK)
-      .json(articles);
+    let result;
+
+    if (limit || article) {
+      result = await articlesService.findPage({limit, article});
+    } else {
+      result = await articlesService.findAll(comments);
+    }
+    res.status(HttpCode.OK).json(result);
   });
 
   route.post(`/`, articlesValidator, async (req, res) => {
