@@ -3,7 +3,7 @@
 const {Router} = require(`express`);
 const mainRouter = new Router();
 const api = require(`../api`).getAPI();
-const OFFERS_PER_PAGE = 8;
+const {OFFERS_PER_PAGE} = require(`../../constants`);
 
 mainRouter.get(`/`, async (req, res) => {
   // получаем номер страницы
