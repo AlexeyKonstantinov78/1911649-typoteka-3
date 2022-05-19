@@ -168,7 +168,19 @@ const mockData = [{
   "category": ["IT"]
 }];
 
-const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
+const {DB_USER, DB_PASSWORD, DB_HOST, DB_PORT} = process.env;
+const mockDB = new Sequelize(
+    `buy_and_sel_test`, DB_USER, DB_PASSWORD, {
+      host: DB_HOST,
+      port: DB_PORT,
+      dialect: `postgres`,
+      pool: {
+        max: 5,
+        min: 0,
+        acquire: 10000,
+        idle: 10000
+      },
+      logging: false});
 
 const app = express();
 app.use(express.json());
