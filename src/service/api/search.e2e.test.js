@@ -168,56 +168,75 @@ const mockData = [{
   "category": ["IT"]
 }];
 
-const {DB_USER, DB_PASSWORD, DB_HOST, DB_PORT} = process.env;
-const mockDB = new Sequelize(
-    `buy_and_sel_test`, DB_USER, DB_PASSWORD, {
-      host: DB_HOST,
-      port: DB_PORT,
-      dialect: `postgres`,
-      pool: {
-        max: 5,
-        min: 0,
-        acquire: 10000,
-        idle: 10000
-      },
-      logging: false});
+const createAPI = async () => {
+  const {DB_USER, DB_PASSWORD, DB_HOST, DB_PORT} = process.env;
+  const mockDB = new Sequelize(
+      `buy_and_sel_test`, DB_USER, DB_PASSWORD, {
+        host: DB_HOST,
+        port: DB_PORT,
+        dialect: `postgres`,
+        pool: {
+          max: 5,
+          min: 0,
+          acquire: 10000,
+          idle: 10000
+        },
+        logging: false});
 
-const app = express();
-app.use(express.json());
-// search(app, new DataService(mockData));
-
-beforeAll(async () => {
   await initDB(mockDB, {categories: mockCategories, articles: mockData});
+  const app = express();
+  app.use(express.json());
+
   search(app, new DataService(mockDB));
-});
+  return app;
+};
 
 describe(`API returns article based on search query`, () => {
-  let response;
 
-  beforeAll(async () => {
-    response = await request(app)
+  test(`Status code 200`, async () => {
+    const app = await createAPI();
+    const response = await request(app)
       .get(`/search`)
       .query({
         query: `Ёлки. История деревьев`
       });
+    expect(response.statusCode).toBe(HttpCode.OK);
   });
 
-  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
-  test(`1 articles found`, () => expect(response.body.length).toBe(1));
-  test(`Article has correct id`, () => expect(response.body[0].title).toBe(`Борьба с прокрастинацией`));
+  test(`1 articles found`, async () => {
+    const app = await createAPI();
+    const response = await request(app)
+      .get(`/search`)
+      .query({
+        query: `Ёлки. История деревьев`
+      });
+    expect(response.body.length).toBe(1);
+  });
 
-  test(`API returns code 404 if nothing is found`,
-  () => request(app)
-    .get(`/search`)
-    .query({
-      query: `Продам свою дуу`
-    })
-    .expect(HttpCode.NOT_FOUND)
-  );
+  test(`Article has correct id`, async () => {
+    const app = await createAPI();
+    const response = await request(app)
+      .get(`/search`)
+      .query({
+        query: `Ёлки. История деревьев`
+      });
+    expect(response.body[0].title).toBe(`Борьба с прокрастинацией`);
+  });
 
-  test(`API returns 400 when query string is absent`,
-  () => request(app)
-    .get(`/search`)
-    .expect(HttpCode.BAD_REQUEST)
-  );
+  test(`API returns code 404 if nothing is found`, async () => {
+    const app = await createAPI();
+    request(app)
+      .get(`/search`)
+      .query({
+        query: `Продам свою дуу`
+      })
+      .expect(HttpCode.NOT_FOUND);
+  });
+
+  test(`API returns 400 when query string is absent`, async () => {
+    const app = await createAPI();
+    request(app)
+      .get(`/search`)
+      .expect(HttpCode.BAD_REQUEST);
+  });
 });

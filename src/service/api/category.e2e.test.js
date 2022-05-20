@@ -168,43 +168,48 @@ const mockData = [{
   "category": ["IT"]
 }];
 
-const {DB_USER, DB_PASSWORD, DB_HOST, DB_PORT} = process.env;
-const mockDB = new Sequelize(
-    `buy_and_sel_test`, DB_USER, DB_PASSWORD, {
-      host: DB_HOST,
-      port: DB_PORT,
-      dialect: `postgres`,
-      pool: {
-        max: 5,
-        min: 0,
-        acquire: 10000,
-        idle: 10000
-      },
-      logging: false});
+const createAPI = async () => {
+  const {DB_USER, DB_PASSWORD, DB_HOST, DB_PORT} = process.env;
+  const mockDB = new Sequelize(
+      `buy_and_sel_test`, DB_USER, DB_PASSWORD, {
+        host: DB_HOST,
+        port: DB_PORT,
+        dialect: `postgres`,
+        pool: {
+          max: 5,
+          min: 0,
+          acquire: 10000,
+          idle: 10000
+        },
+        logging: false});
 
-const app = express();
-app.use(express.json());
-
-beforeAll(async () => {
   await initDB(mockDB, {categories: mockCategories, articles: mockData});
-  category(app, new DataService(mockDB));
-});
+  const app = express();
+  app.use(express.json());
 
-// category(app, new DataService(mockData));
+  category(app, new DataService(mockDB));
+  return app;
+};
 
 describe(`API returns category list`, () => {
 
-  let response;
-
-  beforeAll(async () => {
-    response = await request(app)
+  test(`Status code 200`, async () => {
+    const app = await createAPI();
+    const response = await request(app);
       .get(`/category`);
+    expect(response.statusCode).toBe(HttpCode.OK);
   });
 
-  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
+  test(`Returns list of 3 categories`, async () => {
+    const app = await createAPI();
+    const response = await request(app);
+    expect(response.body.length).toBe(7);
+  });
 
-  test(`Returns list of 3 categories`, () => expect(response.body.length).toBe(7));
-
-  test(`Category names are "Деревья", "Без рамки", "Кино", "Программирование", "За жизнь", "Железо", "IT"`, () => expect(response.body).toEqual(expect.arrayContaining(["Деревья", "Без рамки", "Кино", "Программирование", "За жизнь", "Железо", "IT"])));
+  test(`Category names are "Деревья", "Без рамки", "Кино", "Программирование", "За жизнь", "Железо", "IT"`, async () => {
+    const app = await createAPI();
+    const response = await request(app);
+    expect(response.body).toEqual(expect.arrayContaining(["Деревья", "Без рамки", "Кино", "Программирование", "За жизнь", "Железо", "IT"]));
+  });
 
 });

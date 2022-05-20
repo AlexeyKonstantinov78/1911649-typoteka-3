@@ -125,38 +125,40 @@ const createAPI = async () => {
   return app;
 };
 
-
-
 describe(`API returns a list of all articles`, () => {
 
-  let response;
-
-  beforeAll(async () => {
+  test(`Status code 200`, async () => {
     const app = await createAPI();
-    response = await request(app)
-      .get(`/articles`);
+    const response = await request(app).get(`/articles`);
+    expect(response.statusCode).toBe(HttpCode.OK);
   });
 
-  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
+  test(`Returns a list of 5 offers`, async () => {
+    const app = await createAPI();
+    const response = await request(app).get(`/articles`);
+    expect(response.body.length).toBe(5);
+  });
 
-  test(`Returns a list of 5 offers`, () => expect(response.body.length).toBe(5));
-
-  test(`First offer's title equals "Куплю антиквариат"`, () => expect(response.body[0].title).toBe(`Что такое золотое сечение`));
+  test(`First offer's title equals "Куплю антиквариат"`, async () => {
+    const app = await createAPI();
+    const response = await request(app).get(`/articles`);
+    expect(response.body[0].title).toBe(`Что такое золотое сечение`);
+  });
 });
 
 describe(`API returns an articles with given id`, () => {
 
-  let response;
-
-  beforeAll(async () => {
+  test(`Status code 200`, async () => {
     const app = await createAPI();
-    response = await request(app)
-      .get(`/articles/1`);
+    const response = await request(app).get(`/articles/1`);
+    expect(response.statusCode).toBe(HttpCode.OK);
   });
 
-  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
-
-  test(`Offer's title is "Что такое золотое сечение"`, () => expect(response.body.title).toBe(`Что такое золотое сечение`));
+  test(`Offer's title is "Что такое золотое сечение"`, async () => {
+    const app = await createAPI();
+    const response = await request(app).get(`/articles/1`);
+    expect(response.body.title).toBe(`Что такое золотое сечение`);
+  });
 });
 
 describe(`API creates an article if data is valid`, () => {
@@ -169,24 +171,29 @@ describe(`API creates an article if data is valid`, () => {
       "Без рубрики"
     ]};
 
-  let response;
-  let app;
-
-  beforeAll(async () => {
-    app = await createAPI();
-    response = await request(app)
+  test(`Status code 201`, async () => {
+    const app = await createAPI();
+    const response = await request(app)
       .post(`/articles`)
       .send(newArticle);
+    expect(response.statusCode).toBe(HttpCode.CREATED);
   });
 
-  test(`Status code 201`, () => expect(response.statusCode).toBe(HttpCode.CREATED));
+  test(`Returns article created`, async () => {
+    const app = await createAPI();
+    const response = await request(app)
+      .post(`/articles`)
+      .send(newArticle);
+    expect(response.body).toEqual(expect.objectContaining(newArticle));
+  });
 
-  test(`Returns article created`, () => expect(response.body).toEqual(expect.objectContaining(newArticle)));
+  test(`Articles count is changed`, async () => {
+    const app = await createAPI();
 
-  test(`Articles count is changed`, () => request(app)
-    .get(`/articles`)
-    .expect((res) => expect(res.body.length).toBe(6))
-  );
+    request(app)
+      .get(`/articles`)
+      .expect((res) => expect(res.body.length).toBe(6));
+  });
 });
 
 describe(`API refuses to create an articles if data is invalid`, () => {
@@ -199,13 +206,8 @@ describe(`API refuses to create an articles if data is invalid`, () => {
     sum: 100500
   };
 
-  let app;
-
-  beforeAll(async () => {
-    app = await createAPI();
-  });
-
   test(`Without any required property response code is 400`, async () => {
+    const app = await createAPI();
     for (const key of Object.keys(newArticles)) {
       const badOffer = {...newArticles};
       delete badOffer[key];
@@ -229,22 +231,20 @@ describe(`API changes existent article`, () => {
       ]
     };
 
-  let app;
-  let response;
-
-  beforeAll(async () => {
-    app = await createAPI();
-    response = await request(app)
+  test(`Status code 200`, async () => {
+    const app = await createAPI();
+    const response = await request(app)
       .put(`/articles/oHfTeu`)
       .send(newOffer);
+    expect(response.statusCode).toBe(HttpCode.OK);
   });
 
-  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
-
-  test(`Offer is really changed`, () => request(app)
-    .get(`/articles/oHfTeu`)
-    .expect((res) => expect(res.body.title).toBe(`Новая публикация`))
-  );
+  test(`Offer is really changed`, async () => {
+    const app = await createAPI();
+    request(app)
+      .get(`/articles/oHfTeu`)
+      .expect((res) => expect(res.body.title).toBe(`Новая публикация`));
+  });
 });
 
 test(`API returns status code 404 when trying to change non-existent articles`, async () => {
@@ -285,23 +285,35 @@ test(`API returns status code 400 when trying to change an articles with invalid
 
 describe(`API correctly deletes an articles`, () => {
 
-  let app;
-  let response;
+  // let app;
+  // let response;
 
-  beforeAll(async () => {
-    app = await createAPI();
-    response = await request(app)
+  // beforeAll(async () => {
+  //   app = await createAPI();
+  //   response = await request(app)
+  //     .delete(`/articles/aYnqTV`);
+  // });
+
+  test(`Status code 200`, async () => {
+    const app = await createAPI();
+    const response = await request(app)
       .delete(`/articles/aYnqTV`);
+    expect(response.statusCode).toBe(HttpCode.OK);
   });
 
-  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
+  test(`Returns deleted offer`, async () => {
+    const app = await createAPI();
+    const response = await request(app)
+      .delete(`/articles/aYnqTV`);
+    expect(response.body.id).toBe(`aYnqTV`);
+  });
 
-  test(`Returns deleted offer`, () => expect(response.body.id).toBe(`aYnqTV`));
-
-  test(`Articles count is 4 now`, () => request(app)
-    .get(`/articles`)
-    .expect((res) => expect(res.body.length).toBe(5))
-  );
+  test(`Articles count is 4 now`, async () => {
+    const app = await createAPI();
+    request(app)
+      .get(`/articles`)
+      .expect((res) => expect(res.body.length).toBe(5));
+  });
 });
 
 test(`API refuses to delete non-existent articles`, async () => {
