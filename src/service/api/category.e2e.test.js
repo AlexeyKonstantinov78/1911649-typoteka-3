@@ -2,11 +2,12 @@
 
 const express = require(`express`);
 const request = require(`supertest`);
-const Sequelize = require(`sequelize`);
 
 const initDB = require(`../lib/init-db`);
 const category = require(`./category`);
 const DataService = require(`../data-service/category`);
+
+const mockDB = require(`../lib/mock-db`);
 
 const {HttpCode} = require(`../../constants`);
 
@@ -169,19 +170,6 @@ const mockData = [{
 }];
 
 const createAPI = async () => {
-  const {DB_NAME_TEST, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT} = process.env;
-  const mockDB = new Sequelize(
-    DB_NAME_TEST, DB_USER, DB_PASSWORD, {
-      host: DB_HOST,
-      port: DB_PORT,
-      dialect: `postgres`,
-      pool: {
-        max: 5,
-        min: 0,
-        acquire: 10000,
-        idle: 10000
-      },
-      logging: false});
 
   await initDB(mockDB, {categories: mockCategories, articles: mockData});
   const app = express();
