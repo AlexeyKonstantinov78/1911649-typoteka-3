@@ -2,10 +2,24 @@
 
 const express = require(`express`);
 const request = require(`supertest`);
-const {HttpCode} = require(`../../constants`);
 
+const initDB = require(`../lib/init-db`);
 const category = require(`./category`);
 const DataService = require(`../data-service/category`);
+
+const mockDB = require(`../lib/mock-db`);
+
+const {HttpCode} = require(`../../constants`);
+
+const mockCategories = [
+  `Деревья`,
+  `Без рамки`,
+  `Кино`,
+  `Программирование`,
+  `За жизнь`,
+  `Железо`,
+  `IT`
+];
 
 const mockData = [{
   "id": "BDp1-D",
@@ -155,23 +169,35 @@ const mockData = [{
   "category": ["IT"]
 }];
 
-const app = express();
-app.use(express.json());
-category(app, new DataService(mockData));
+const createAPI = async () => {
+
+  await initDB(mockDB, {categories: mockCategories, articles: mockData});
+  const app = express();
+  app.use(express.json());
+
+  category(app, new DataService(mockDB));
+  return app;
+};
 
 describe(`API returns category list`, () => {
 
-  let response;
-
-  beforeAll(async () => {
-    response = await request(app)
-      .get(`/categories`);
+  test(`Status code 200`, async () => {
+    const app = await createAPI();
+    const response = await request(app);
+      .get(`/category`);
+    expect(response.statusCode).toBe(HttpCode.OK);
   });
 
-  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
+  test(`Returns list of 3 categories`, async () => {
+    const app = await createAPI();
+    const response = await request(app);
+    expect(response.body.length).toBe(7);
+  });
 
-  test(`Returns list of 3 categories`, () => expect(response.body.length).toBe(7));
-
-  test(`Category names are "Журналы", "Игры", "Животные"`, () => expect(response.body).toEqual(expect.arrayContaining(["Деревья", "Без рамки", "Кино", "Программирование", "За жизнь", "Железо", "IT"])));
+  test(`Category names are "Деревья", "Без рамки", "Кино", "Программирование", "За жизнь", "Железо", "IT"`, async () => {
+    const app = await createAPI();
+    const response = await request(app);
+    expect(response.body).toEqual(expect.arrayContaining(["Деревья", "Без рамки", "Кино", "Программирование", "За жизнь", "Железо", "IT"]));
+  });
 
 });

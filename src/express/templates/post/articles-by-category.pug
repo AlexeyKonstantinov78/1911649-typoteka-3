@@ -8,7 +8,7 @@ block content
       ul.themes
         each category of categorys
           li.themes__item
-            a.themes__item-link(href="#") #{category} <sup></sup>
+            a.themes__item-link(href="#") #{category.name} <sup></sup>
         //- li.themes__item
         //-   a.themes__item-link(href="#") Удаленная работа <sup>13</sup>
         //- li.themes__item
@@ -32,7 +32,8 @@ block content
                   a.preview__breadcrumbs-link(href="#") #{item}
             if offer.img
               div.preview__background
-                img.preview__background-image(src="img/skyscraper@1x.jpg", width="460", height="240", srcset="img/skyscraper@1x.jpg 1x, img/skyscraper@2x.jpg 2x", alt="Фотография небоскреба")
+                +categoryImage(category)(class="preview__background-image")
+                //- img.preview__background-image(src="img/skyscraper@1x.jpg", width="460", height="240", srcset="img/skyscraper@1x.jpg 1x, img/skyscraper@2x.jpg 2x", alt="Фотография небоскреба")
             time.preview__time(datetime= offer.createdDate) #{offer.createdDate}
             h3.preview__name
               a.preview__name-link(href="#") #{offer.title}

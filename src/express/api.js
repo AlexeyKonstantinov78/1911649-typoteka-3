@@ -23,8 +23,8 @@ class API {
     return response.data;
   }
 
-  getOffers() {
-    return this._load(`/articles`);
+  getOffers({offset, limit, comments}) {
+    return this._load(`/articles`, {params: {offset, limit, comments}});
   }
 
   getOffer(id) {
@@ -35,8 +35,8 @@ class API {
     return this._load(`/search`, {params: {query}});
   }
 
-  async getCategories() {
-    return await this._load(`/categories`);
+  async getCategories(count) {
+    return await this._load(`/categories`, {params: {count}});
   }
 
   async createOffer(data) {
