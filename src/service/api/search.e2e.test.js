@@ -169,9 +169,9 @@ const mockData = [{
 }];
 
 const createAPI = async () => {
-  const {DB_USER, DB_PASSWORD, DB_HOST, DB_PORT} = process.env;
+  const {DB_NAME_TEST, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT} = process.env;
   const mockDB = new Sequelize(
-      `buy_and_sel_test`, DB_USER, DB_PASSWORD, {
+      DB_NAME_TEST, DB_USER, DB_PASSWORD, {
         host: DB_HOST,
         port: DB_PORT,
         dialect: `postgres`,

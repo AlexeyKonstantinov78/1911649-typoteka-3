@@ -100,9 +100,9 @@ const mockData = [{
 }];
 
 const createAPI = async () => {
-  const {DB_USER, DB_PASSWORD, DB_HOST, DB_PORT} = process.env;
+  const {DB_NAME_TEST, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT} = process.env;
   const mockDB = new Sequelize(
-      `buy_and_sel_test`, DB_USER, DB_PASSWORD, {
+      DB_NAME_TEST, DB_USER, DB_PASSWORD, {
         host: DB_HOST,
         port: DB_PORT,
         dialect: `postgres`,
@@ -113,7 +113,6 @@ const createAPI = async () => {
           idle: 10000
         },
         logging: false});
-  // const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
 
   await initDB(mockDB, {categories: mockCategories, articles: mockData});
 
@@ -284,15 +283,6 @@ test(`API returns status code 400 when trying to change an articles with invalid
 });
 
 describe(`API correctly deletes an articles`, () => {
-
-  // let app;
-  // let response;
-
-  // beforeAll(async () => {
-  //   app = await createAPI();
-  //   response = await request(app)
-  //     .delete(`/articles/aYnqTV`);
-  // });
 
   test(`Status code 200`, async () => {
     const app = await createAPI();
