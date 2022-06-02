@@ -5,6 +5,13 @@ html(lang="ru")
     a.active{
     pointer-events: none;
     }
+    .server-error{
+      border-radius: 10px;
+      color: white;
+      background-color: tomato;
+      margin: 20px 0;
+      padding: 10px;
+    }
   body
     -
       const getRandomInt = (max) => Math.ceil(Math.random()*max);
@@ -47,6 +54,10 @@ html(lang="ru")
           if end < totalPages
             li
               a.pagination__button.button.button--forward(href=`${prefix}page=${page + 1}`) Вперёд
+    mixin insertErrorMessage(messages)
+      if messages
+        each message of messages
+          .server-error= message
 
     div.wrapper
       include includes/header.pug

@@ -4,6 +4,7 @@ const {Router} = require(`express`);
 const {HttpCode} = require(`../../constants`);
 const articlesValidator = require(`../middlewares/articles-validator`);
 const commentValidator = require(`../middlewares/comment-validator`);
+const routeParamsValidator = require(`../middlewares/route-params-validator`);
 
 module.exports = (app, articlesService, commentService) => {
   const route = new Router();
@@ -30,7 +31,7 @@ module.exports = (app, articlesService, commentService) => {
       .json(articles);
   });
 
-  route.get(`/:articleId`, async (req, res) => {
+  route.get(`/:articleId`, routeParamsValidator, async (req, res) => {
     const {articleId} = req.params;
     const article = await articlesService.findOne(articleId);
 
@@ -43,7 +44,7 @@ module.exports = (app, articlesService, commentService) => {
       .json(article);
   });
 
-  route.put(`/:articleId`, articlesValidator, async (req, res) => {
+  route.put(`/:articleId`, [routeParamsValidator, articlesValidator], async (req, res) => {
     const {articleId} = req.params;
     const updated = await articlesService.update(articleId, req.body);
 
@@ -55,7 +56,7 @@ module.exports = (app, articlesService, commentService) => {
       .send(`Updated`);
   });
 
-  route.delete(`/:articleId`, async (req, res) => {
+  route.delete(`/:articleId`, routeParamsValidator, async (req, res) => {
     const {articleId} = req.params;
     const {body} = req.body;
     const article = await articlesService.findOne(articleId);
@@ -76,7 +77,7 @@ module.exports = (app, articlesService, commentService) => {
       .json(deletedArticle);
   });
 
-  route.get(`/:articleId/comments`, async (req, res) => {
+  route.get(`/:articleId/comments`, routeParamsValidator, async (req, res) => {
     const {articleId} = req.params;
     const comments = await commentService.findAll(articleId);
 
@@ -89,7 +90,7 @@ module.exports = (app, articlesService, commentService) => {
     .json(comments);
   });
 
-  route.post(`/:articleId/comments`, commentValidator, async (req, res) => {
+  route.post(`/:articleId/comments`, [routeParamsValidator, commentValidator], async (req, res) => {
     const {articleId} = req.params;
     const comment = await commentService.create(articleId, req.body);
 
@@ -102,7 +103,7 @@ module.exports = (app, articlesService, commentService) => {
       .json(comment);
   });
 
-  route.delete(`/:articleId/comments/:commentId`, async (req, res) => {
+  route.delete(`/:articleId/comments/:commentId`, routeParamsValidator, async (req, res) => {
     const {articleId, commentId} = req.params;
 
     const comment = await commentService.findOne(commentId, articleId);
