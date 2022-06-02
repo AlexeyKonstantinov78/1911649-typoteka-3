@@ -139,7 +139,7 @@ describe(`API returns a list of all articles`, () => {
       {...mockData, picture: 12345},
       {...mockData, categories: `Котики`}
     ];
-    for (const badOffer of badOffers) {
+    for await (const badOffer of badOffers) {
       await request(app)
         .post(`/articles`)
         .send(badOffer)
@@ -152,7 +152,7 @@ describe(`API returns a list of all articles`, () => {
       {...mockData, title: `too short`},
       {...mockData, categories: []}
     ];
-    for (const badOffer of badOffers) {
+    for await (const badOffer of badOffers) {
       await request(app)
         .post(`/offers`)
         .send(badOffer)
