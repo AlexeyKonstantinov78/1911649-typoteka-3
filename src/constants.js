@@ -26,13 +26,37 @@ const HttpCode = {
   BAD_REQUEST: 400,
 };
 
+const HttpMethod = {
+  GET: `GET`,
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`
+}
+
+const ErrorCommentMessage = {
+  TEXT: `Комментарий содержит меньше 20 символов`
+};
+
+const ErrorArticleMessage = {
+  CATEGORIES: `Не выбрана ни одна категория объявления`,
+  TITLE_MIN: `Заголовок содержит меньше 10 символов`,
+  TITLE_MAX: `Заголовок не может содержать более 100 символов`,
+  ANNOUNCE_MIN: `Описание содержит меньше 50 символов`,
+  ANNOUNCE_MAX: `Описание не может содержать более 1000 символов`,
+  PICTURE: `Изображение не выбрано или тип изображения не поддерживается`,
+  FULL_TEXT_MAX: `публикация не может содержать более 1000 символов`
+};
+
 module.exports = {
   DEFAULT_COMMAND,
   USER_ARGV_INDEX,
   ExitCode,
   HttpCode,
+  ErrorCommentMessage,
   MAX_ID_LENGTH,
   API_PREFIX,
   OFFERS_PER_PAGE,
-  Env
+  Env,
+  ErrorArticleMessage,
+  HttpMethod
 };

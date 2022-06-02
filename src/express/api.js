@@ -3,6 +3,7 @@
 const axios = require(`axios`);
 const {getLogger} = require(`../service/lib/logger`);
 const logger = getLogger({name: `api http`});
+const {HttpMethod} = require(`../../constants`);
 
 const TIMEOUT = 1000;
 
@@ -33,6 +34,20 @@ class API {
 
   search(query) {
     return this._load(`/search`, {params: {query}});
+  }
+
+  editOffer(id, data) {
+    return this._load(`/offers/${id}`, {
+      method: HttpMethod.PUT,
+      data
+    });
+  }
+
+  createComment(id, data) {
+    return this._load(`/offers/${id}/comments`, {
+      method: HttpMethod.POST,
+      data
+    });
   }
 
   async getCategories(count) {

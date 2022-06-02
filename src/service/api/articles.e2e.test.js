@@ -132,6 +132,34 @@ describe(`API returns a list of all articles`, () => {
     const response = await request(app).get(`/articles`);
     expect(response.body[0].title).toBe(`Что такое золотое сечение`);
   });
+
+  test(`When field type is wrong response code is 400`, async () => {
+    const app = await createAPI();
+    const badOffers = [
+      {...mockData, picture: 12345},
+      {...mockData, categories: `Котики`}
+    ];
+    for (const badOffer of badOffers) {
+      await request(app)
+        .post(`/articles`)
+        .send(badOffer)
+        .expect(HttpCode.BAD_REQUEST);
+    }
+  });
+
+  test(`When field value is wrong response code is 400`, async () => {
+    const badOffers = [
+      {...mockData, title: `too short`},
+      {...mockData, categories: []}
+    ];
+    for (const badOffer of badOffers) {
+      await request(app)
+        .post(`/offers`)
+        .send(badOffer)
+        .expect(HttpCode.BAD_REQUEST);
+    }
+  });
+});
 });
 
 describe(`API returns an articles with given id`, () => {
