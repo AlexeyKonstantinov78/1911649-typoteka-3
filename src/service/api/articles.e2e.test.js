@@ -148,6 +148,7 @@ describe(`API returns a list of all articles`, () => {
   });
 
   test(`When field value is wrong response code is 400`, async () => {
+    const app = await createAPI();
     const badOffers = [
       {...mockData, title: `too short`},
       {...mockData, categories: []}
@@ -159,7 +160,6 @@ describe(`API returns a list of all articles`, () => {
         .expect(HttpCode.BAD_REQUEST);
     }
   });
-});
 });
 
 describe(`API returns an articles with given id`, () => {

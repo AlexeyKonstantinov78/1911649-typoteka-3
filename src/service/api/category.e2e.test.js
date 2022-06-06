@@ -183,7 +183,7 @@ describe(`API returns category list`, () => {
 
   test(`Status code 200`, async () => {
     const app = await createAPI();
-    const response = await request(app);
+    const response = await request(app)
       .get(`/category`);
     expect(response.statusCode).toBe(HttpCode.OK);
   });
