@@ -19,11 +19,11 @@ const schema = Joi.object({
     'string.min': ErrorArticleMessage.ANNOUNCE_MIN,
     'string.max': ErrorArticleMessage.ANNOUNCE_MAX
   }),
-  picture: Joi.string().required().messages({
-    'string.empty': ErrorArticleMessage.PICTURE
-  }),
   fullText: Joi.string().max(1000).messages({
     'string.max': ErrorArticleMessage.FULL_TEXT_MAX
+  }),
+  picture: Joi.string().required().messages({
+    'string.empty': ErrorArticleMessage.PICTURE
   })
 });
 
