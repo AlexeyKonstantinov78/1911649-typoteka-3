@@ -3,7 +3,7 @@
 const defineModels = require(`../models`);
 const Aliase = require(`../models/aliase`);
 
-module.exports = async (sequelize, {categories, articles}) => {
+module.exports = async (sequelize, {articles, categories}) => {
   const {Category, Article} = defineModels(sequelize);
   await sequelize.sync({force: true});
 

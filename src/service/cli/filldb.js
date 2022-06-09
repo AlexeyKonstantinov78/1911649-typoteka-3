@@ -1,8 +1,6 @@
 'use strict';
 
 const sequelize = require(`../lib/sequelize`);
-const defineModels = require(`../models`);
-const Aliase = require(`../models/aliase`);
 
 const {getLogger} = require(`../lib/logger`);
 const logger = getLogger({name: `filldb`});
@@ -11,8 +9,6 @@ const initDatabase = require(`../lib/init-db`);
 const {getRandomInt, shuffle} = require(`../../utils`);
 const {MAX_ID_LENGTH, ExitCode} = require(`../../constants`);
 const fs = require(`fs`).promises;
-// const chalk = require(`chalk`);
-// const {nanoid} = require(`nanoid`);
 
 const DEFAULT_COUNT = 1; // по умолчанию 1 публикация
 const MAX_COMMENTS = 4;
@@ -88,8 +84,6 @@ module.exports = {
 
     logger.info(`Установлено соединение с базой данных`);
 
-    const {Category, Article} = defineModels(sequelize);
-
     await sequelize.sync({force: true});
 
     const titles = await readFile(FILE_TITLES_PATH);
@@ -97,15 +91,10 @@ module.exports = {
     const categories = await readFile(FILE_CATEGORIES_PATH);
     const comments = await readFile(FILE_COMMENTS_PATH);
 
-    const categoryModels = await Category.bulkCreate(
-        categories.map((item) => ({name: item}))
-    );
-
     const [count] = args;
     const countArticle = Number.parseInt(count, 10) || DEFAULT_COUNT;
+    const articles = generateOffers(countArticle, titles, sentences, categories, comments);
 
-    const articles = generateOffers(countArticle, titles, categoryModels, sentences, comments);
-
-    return initDatabase(sequelize, {categories, articles});
+    return initDatabase(sequelize, {articles, categories});
   }
 };

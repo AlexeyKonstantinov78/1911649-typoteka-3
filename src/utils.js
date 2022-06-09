@@ -13,6 +13,7 @@ const shuffle = (someArray) => {
   }
 
   return someArray;
+
 };
 
 const ensureArray = (value) => Array.isArray(value) ? value : [value];
