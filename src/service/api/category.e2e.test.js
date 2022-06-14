@@ -152,20 +152,20 @@ describe(`API returns category list`, () => {
   test(`Status code 200`, async () => {
     const app = await createAPI();
     const response = await request(app)
-      .get(`/category`);
+      .get(`/categories`);
     expect(response.statusCode).toBe(HttpCode.OK);
   });
 
   test(`Returns list of 3 categories`, async () => {
     const app = await createAPI();
-    const response = await request(app);
+    const response = await request(app).get(`/categories`);
     expect(response.body.length).toBe(7);
   });
 
   test(`Category names are "Деревья", "Без рамки", "Кино", "Программирование", "За жизнь", "Железо", "IT"`, async () => {
     const app = await createAPI();
-    const response = await request(app);
-    expect(response.body).toEqual(expect.arrayContaining(["Деревья", "Без рамки", "Кино", "Программирование", "За жизнь", "Железо", "IT"]));
+    const response = await request(app).get(`/categories`);
+    expect(response.body.map((it) => it.name)).toEqual(expect.arrayContaining(["Деревья", "Без рамки", "Кино", "Программирование", "За жизнь", "Железо", "IT"]));
   });
 
 });
