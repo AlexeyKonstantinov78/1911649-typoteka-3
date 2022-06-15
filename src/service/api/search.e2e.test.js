@@ -181,7 +181,7 @@ describe(`API returns article based on search query`, () => {
 
   test(`API returns code 404 if nothing is found`, async () => {
     const app = await createAPI();
-    request(app)
+    await request(app)
       .get(`/search`)
       .query({
         query: `Продам свою дуу`
@@ -191,7 +191,7 @@ describe(`API returns article based on search query`, () => {
 
   test(`API returns 400 when query string is absent`, async () => {
     const app = await createAPI();
-    request(app)
+    await request(app)
       .get(`/search`)
       .expect(HttpCode.BAD_REQUEST);
   });
