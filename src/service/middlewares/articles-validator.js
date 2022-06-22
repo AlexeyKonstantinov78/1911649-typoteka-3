@@ -6,11 +6,6 @@ const {HttpCode, ErrorArticleMessage} = require(`../../constants`);
 const articlesKeys = [`title`, `announce`, `fullText`, `createdDate`, `category`];
 
 const schema = Joi.object({
-  categories: Joi.array().items(
-      Joi.number().integer().positive().messages({
-        'number.base': ErrorArticleMessage.CATEGORIES
-      })
-  ).min(1).required(),
   title: Joi.string().min(10).max(100).required().messages({
     'string.min': ErrorArticleMessage.TITLE_MIN,
     'string.max': ErrorArticleMessage.TITLE_MAX
@@ -22,9 +17,14 @@ const schema = Joi.object({
   fullText: Joi.string().max(1000).messages({
     'string.max': ErrorArticleMessage.FULL_TEXT_MAX
   }),
-  picture: Joi.string().required().messages({
+  picture: Joi.string().messages({
     'string.empty': ErrorArticleMessage.PICTURE
-  })
+  }),
+  categories: Joi.array().items(
+      Joi.number().integer().positive().messages({
+        'number.base': ErrorArticleMessage.CATEGORIES
+      })
+  ).min(1).required()
 });
 
 module.exports = (req, res, next) => {
