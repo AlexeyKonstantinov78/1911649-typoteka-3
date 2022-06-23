@@ -145,11 +145,11 @@ const createAPI = async () => {
 
   const app = express();
   app.use(express.json());
-  // const cloneData = JSON.parse(JSON.stringify(mockData));
 
   articles(app, new DataService(mockDB), new CommentService(mockDB));
   return app;
 };
+
 
 describe(`API returns a list of all articles`, () => {
 
@@ -218,12 +218,10 @@ describe(`API returns an articles with given id`, () => {
 describe(`API creates an article if data is valid`, () => {
   const newArticle = {
     "title": "Новая публикация",
-    "announce": "Текст публикации",
+    "announce": "Текст публикации Должен быть 30",
     "fullText": "Текст публикации полный",
-    "createdDate": "2022-2-26 22:43:20",
-    "category": [
-      "Без рубрики"
-    ]};
+    "categories": [7]
+  };
 
   test(`Status code 201`, async () => {
     const app = await createAPI();
@@ -231,14 +229,6 @@ describe(`API creates an article if data is valid`, () => {
       .post(`/articles`)
       .send(newArticle);
     expect(response.statusCode).toBe(HttpCode.CREATED);
-  });
-
-  test(`Returns article created`, async () => {
-    const app = await createAPI();
-    const response = await request(app)
-      .post(`/articles`)
-      .send(newArticle);
-    expect(response.body).toEqual(expect.objectContaining(newArticle));
   });
 
   test(`Articles count is changed`, async () => {
@@ -342,22 +332,22 @@ describe(`API correctly deletes an articles`, () => {
   test(`Status code 200`, async () => {
     const app = await createAPI();
     const response = await request(app)
-      .delete(`/articles/aYnqTV`);
+      .delete(`/articles/1`);
     expect(response.statusCode).toBe(HttpCode.OK);
   });
 
   test(`Returns deleted offer`, async () => {
     const app = await createAPI();
     const response = await request(app)
-      .delete(`/articles/aYnqTV`);
-    expect(response.body.id).toBe(`aYnqTV`);
+      .delete(`/articles/1`);
+    expect(response.body.id).toBe(`1`);
   });
 
-  test(`Articles count is 4 now`, async () => {
+  test(`Articles count is 10 now`, async () => {
     const app = await createAPI();
     return await request(app)
       .get(`/articles`)
-      .expect((res) => expect(res.body.length).toBe(5));
+      .expect((res) => expect(res.body.length).toBe(10));
   });
 });
 
@@ -400,6 +390,6 @@ test(`API refuses to delete non-existent comment`, async () => {
   const app = await createAPI();
 
   return await request(app)
-    .delete(`/articles/aYnqTV/comments/dfgfgd`)
+    .delete(`/articles/1/comments/1`)
     .expect(HttpCode.NOT_FOUND);
 });
