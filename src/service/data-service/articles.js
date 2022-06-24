@@ -1,10 +1,6 @@
 'use strict';
 
-const Sequelize = require(`sequelize`);
 const Aliase = require(`../models/aliase`);
-
-// const {MAX_ID_LENGTH} = require(`../../constants`);
-// const {nanoid} = require(`nanoid`);
 
 class ArticlesService {
   constructor(sequelize) {
@@ -26,14 +22,20 @@ class ArticlesService {
     return !!deletedRows;
   }
 
-  findOne(id) {
-    return this._Article.findByPk(id, {include: [Aliase.CATEGORIES]});
+  async findOne(articleId) {
+    const options = {
+      include: [Aliase.CATEGORIES],
+      where: [{id: articleId}]
+    };
+
+    return await this._Article.findOne(options);
   }
 
   async update(id, article) {
     const [affectedRows] = await this._Article.update(article, {
       where: {id}
     });
+
     return !!affectedRows;
   }
 

@@ -299,16 +299,14 @@ test(`API returns status code 404 when trying to change non-existent articles`, 
 
   const validOffer = {
     "title": "Новая публикация2",
-    "announce": "Текст публикации2",
+    "announce": "Текст публикации должен быть больше 30 символов",
     "fullText": "Текст публикации полный2",
-    "createdDate": "2022-2-26 22:43:20",
-    "category": [
-      "Без рубрики2"
-    ]
+    "picture": "non",
+    "categories": [1]
   };
 
   return await request(app)
-    .put(`/articles/NOEXST`)
+    .put(`/articles/20`)
     .send(validOffer)
     .expect(HttpCode.NOT_FOUND);
 });
@@ -325,7 +323,7 @@ test(`API returns status code 400 when trying to change an articles with invalid
   };
 
   return await request(app)
-    .put(`/articles/NOEXST`)
+    .put(`/articles/20`)
     .send(invalidOffer)
     .expect(HttpCode.BAD_REQUEST);
 });
@@ -339,11 +337,11 @@ describe(`API correctly deletes an articles`, () => {
     expect(response.statusCode).toBe(HttpCode.OK);
   });
 
-  test(`Returns deleted offer`, async () => {
+  test(`Returns deleted articles`, async () => {
     const app = await createAPI();
     const response = await request(app)
       .delete(`/articles/1`);
-    expect(response.body.id).toBe(`1`);
+    expect(response.statusCode).toBe(HttpCode.OK);
   });
 
   test(`Articles count is 10 now`, async () => {
@@ -358,7 +356,7 @@ test(`API refuses to delete non-existent articles`, async () => {
   const app = await createAPI();
 
   return await request(app)
-    .delete(`/articles/NOEXST`)
+    .delete(`/articles/11`)
     .expect(HttpCode.NOT_FOUND);
 });
 
@@ -366,7 +364,7 @@ test(`Status code 200 article comments`, async () => {
   const app = await createAPI();
 
   return await request(app)
-    .get(`/articles/caenj9/comments/`)
+    .get(`/articles/1/comments/`)
     .expect(HttpCode.OK);
 });
 
@@ -374,15 +372,23 @@ test(`Status code 404 not found article comments`, async () => {
   const app = await createAPI();
 
   return await request(app)
-    .get(`/articles/caenj/comments/`)
+    .get(`/articles/11/comments`)
     .expect(HttpCode.NOT_FOUND);
+});
+
+test(`Comments count is 3 now`, async () => {
+  const app = await createAPI();
+
+  return await request(app)
+    .get(`/articles/1/comments`)
+    .expect((res) => expect(res.body.length).toBe(3));
 });
 
 test(`API refuses to create a comment to non-existent article and returns status code 404`, async () => {
   const app = await createAPI();
 
   return await request(app)
-    .post(`/articles/NOEXST/comments`)
+    .post(`/articles/20/comments`)
     .send({
       text: `Неважно`
     })
@@ -393,6 +399,16 @@ test(`API refuses to delete non-existent comment`, async () => {
   const app = await createAPI();
 
   return await request(app)
-    .delete(`/articles/1/comments/1`)
+    .delete(`/articles/1/comments/20`)
     .expect(HttpCode.NOT_FOUND);
 });
+
+test(`API refuses to delete a comment to non-existent offer`, async () => {
+
+  const app = await createAPI();
+
+  return await request(app)
+    .delete(`/offers/20/comments/1`)
+    .expect(HttpCode.NOT_FOUND);
+});
+

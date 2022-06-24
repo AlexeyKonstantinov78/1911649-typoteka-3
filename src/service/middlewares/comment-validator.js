@@ -4,7 +4,7 @@ const Joi = require('joi');
 const {HttpCode, ErrorCommentMessage} = require(`../../constants`);
 
 const schema = Joi.object({
-  text: Joi.string().min(20).required().messages({
+  text: Joi.string().min(1).required().messages({
     'string.min': ErrorCommentMessage.TEXT
   })
 });

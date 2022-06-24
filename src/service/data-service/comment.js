@@ -1,6 +1,5 @@
 'use strict';
 const {MAX_ID_LENGTH} = require(`../../constants`);
-const {nanoid} = require(`nanoid`);
 
 class CommentService {
   constructor(sequelize) {
@@ -16,7 +15,7 @@ class CommentService {
   }
 
   async drop(id) {
-    const deletedRows = this._Comment.destroy({
+    const deletedRows = await this._Comment.destroy({
       where: {id}
     });
     return !!deletedRows;
@@ -29,14 +28,13 @@ class CommentService {
     });
   }
 
-  findOne(id, articleId) {
-    const article = this._articles.find((item) => item.id === articleId);
-
-    if (!article) {
-      return false;
-    }
-
-    return article.comments.find((item) => item.id === id);
+  async findOne(id, articleId) {
+    return await this._Comment.findOne({
+      where: {
+        id,
+        articleId
+      }
+    });
   }
 }
 
