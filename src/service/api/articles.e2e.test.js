@@ -150,7 +150,6 @@ const createAPI = async () => {
   return app;
 };
 
-
 describe(`API returns a list of all articles`, () => {
 
   test(`Status code 200`, async () => {
@@ -267,18 +266,18 @@ describe(`API changes existent article`, () => {
   const newOffer =
     {
       "title": "Новая публикация",
-      "announce": "Текст публикации",
+      "announce": "Текст публикации больше 30 символов",
       "fullText": "Текст публикации полный",
-      "createdDate": "2022-2-26 22:43:20",
-      "category": [
-        "Без рубрики"
+      "picture": "non",
+      "categories": [
+        7
       ]
     };
 
   test(`Status code 200`, async () => {
     const app = await createAPI();
     const response = await request(app)
-      .put(`/articles/11`)
+      .put(`/articles/10`)
       .send(newOffer);
     expect(response.statusCode).toBe(HttpCode.OK);
   });
@@ -286,7 +285,11 @@ describe(`API changes existent article`, () => {
   test(`Offer is really changed`, async () => {
     const app = await createAPI();
     await request(app)
-      .get(`/articles/11`)
+      .put(`/articles/10`)
+      .send(newOffer);
+
+    await request(app)
+      .get(`/articles/10`)
       .expect((res) => expect(res.body.title).toBe(`Новая публикация`));
   });
 });

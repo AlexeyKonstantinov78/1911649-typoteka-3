@@ -3,8 +3,6 @@
 const Joi = require(`joi`);
 const {HttpCode, ErrorArticleMessage} = require(`../../constants`);
 
-const articlesKeys = [`title`, `announce`, `fullText`, `createdDate`, `category`];
-
 const schema = Joi.object({
   title: Joi.string().min(10).max(100).required().messages({
     'string.min': ErrorArticleMessage.TITLE_MIN,
