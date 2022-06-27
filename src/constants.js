@@ -34,7 +34,8 @@ const HttpMethod = {
 }
 
 const ErrorCommentMessage = {
-  TEXT: `Комментарий содержит меньше 20 символов`
+  TEXT: `Комментарий содержит меньше 20 символов`,
+  USER_ID: `Некорректный идентификатор пользователя`
 };
 
 const ErrorArticleMessage = {
@@ -45,6 +46,20 @@ const ErrorArticleMessage = {
   ANNOUNCE_MAX: `Описание не может содержать более 1000 символов`,
   PICTURE: `Изображение не выбрано или тип изображения не поддерживается`,
   FULL_TEXT_MAX: `публикация не может содержать более 1000 символов`
+};
+
+const ErrorRegisterMessage = {
+  NAME: `Имя содержит некорректные символы`,
+  EMAIL: `Некорректный электронный адрес`,
+  EMAIL_EXIST: `Электронный адрес уже используется`,
+  PASSWORD: `Пароль содержит меньше 6-ти символов`,
+  PASSWORD_REPEATED: `Пароли не совпадают`,
+  AVATAR: `Изображение не выбрано или тип изображения не поддерживается`
+};
+
+const ErrorAuthMessage = {
+  EMAIL: `Электронный адрес не существует`,
+  PASSWORD: `Неверный пароль`
 };
 
 module.exports = {
@@ -58,5 +73,7 @@ module.exports = {
   OFFERS_PER_PAGE,
   Env,
   ErrorArticleMessage,
+  ErrorRegisterMessage,
+  ErrorAuthMessage,
   HttpMethod
 };

@@ -6,6 +6,9 @@ const {HttpCode, ErrorCommentMessage} = require(`../../constants`);
 const schema = Joi.object({
   text: Joi.string().min(1).required().messages({
     'string.min': ErrorCommentMessage.TEXT
+  }),
+  userId: Joi.number().integer().positive().required().messages({
+    'number.base': ErrorCommentMessage.USER_ID
   })
 });
 
