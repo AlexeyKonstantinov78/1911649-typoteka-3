@@ -5,7 +5,7 @@ const request = require(`supertest`);
 
 const initDB = require(`../lib/init-db`);
 
-const mockDB = require(`../lib/mock-db`);
+const mockDB = require(`../lib/mock-db2`);
 
 const search = require(`./search`);
 const DataService = require(`../data-service/search`);
