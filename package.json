@@ -5,7 +5,7 @@
   "main": "./src/service/service.js",
   "scripts": {
     "test": "npm run eslint && npm run jest",
-    "jest": "npm run jest",
+    "jest": "jest -i",
     "eslint": "eslint --ext .js src/",
     "start": "chcp.com 65001 && cross-env LOG_LEVEL=debug NODE_ENV=development node -r dotenv/config ./src/service/service.js",
     "start.dev": "cross-env LOG_LEVEL=info NODE_ENV=production node -r dotenv/config ./src/service/service.js --server",

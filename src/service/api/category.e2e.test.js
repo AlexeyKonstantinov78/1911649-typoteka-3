@@ -7,7 +7,7 @@ const initDB = require(`../lib/init-db`);
 const category = require(`./category`);
 const DataService = require(`../data-service/category`);
 
-const mockDB = require(`../lib/mock-db1`);
+const mockDB = require(`../lib/mock-db`);
 const passwordUtils = require(`../lib/password`);
 
 const {HttpCode} = require(`../../constants`);

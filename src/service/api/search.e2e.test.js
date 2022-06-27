@@ -4,7 +4,7 @@ const express = require(`express`);
 const request = require(`supertest`);
 
 const initDB = require(`../lib/init-db`);
-const mockDB = require(`../lib/mock-db2`);
+const mockDB = require(`../lib/mock-db`);
 const passwordUtils = require(`../lib/password`);
 
 const search = require(`./search`);
