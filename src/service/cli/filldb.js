@@ -4,6 +4,7 @@ const sequelize = require(`../lib/sequelize`);
 
 const {getLogger} = require(`../lib/logger`);
 const logger = getLogger({name: `filldb`});
+const passwordUtils = require(`../lib/password`);
 const initDatabase = require(`../lib/init-db`);
 
 const {getRandomInt, shuffle} = require(`../../utils`);
@@ -59,7 +60,7 @@ const getRandomSubarray = (items) => {
   return result;
 };
 
-const generateOffers = (count, titles, sentences, categories, comments) => (
+const generateOffers = (count, titles, sentences, categories, comments, users) => (
   Array(count).fill({}).map(() => ({
     title: titles[getRandomInt(0, titles.length - 1)],
     announce: shuffle(sentences).slice(1, 5).join(` `),
@@ -67,6 +68,7 @@ const generateOffers = (count, titles, sentences, categories, comments) => (
     picture: ``,
     comments: generateComments(getRandomInt(1, MAX_COMMENTS), comments),
     createdDate: generateDate(),
+    user: users[getRandomInt(0, users.length - 1)].email,
     categories: getRandomSubarray(categories)
   }))
 );
@@ -90,11 +92,25 @@ module.exports = {
     const sentences = await readFile(FILE_SENTENCES_PATH);
     const categories = await readFile(FILE_CATEGORIES_PATH);
     const comments = await readFile(FILE_COMMENTS_PATH);
+    const users = [
+      {
+        name: `Иван Иванов`,
+        email: `ivanov@example.com`,
+        passwordHash: await passwordUtils.hash(`ivanov`),
+        avatar: `avatar01.jpg`
+      },
+      {
+        name: `Пётр Петров`,
+        email: `petrov@example.com`,
+        passwordHash: await passwordUtils.hash(`petrov`),
+        avatar: `avatar02.jpg`
+      }
+    ];
 
     const [count] = args;
     const countArticle = Number.parseInt(count, 10) || DEFAULT_COUNT;
-    const articles = generateOffers(countArticle, titles, sentences, categories, comments);
+    const articles = generateOffers(countArticle, titles, sentences, categories, comments, users);
 
-    return initDatabase(sequelize, {articles, categories});
+    return initDatabase(sequelize, {articles, categories, users});
   }
 };
