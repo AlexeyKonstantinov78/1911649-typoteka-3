@@ -37,14 +37,14 @@ class API {
   }
 
   editOffer(id, data) {
-    return this._load(`/offers/${id}`, {
+    return this._load(`/articles/${id}`, {
       method: HttpMethod.PUT,
       data
     });
   }
 
   createComment(id, data) {
-    return this._load(`/offers/${id}/comments`, {
+    return this._load(`/articles/${id}/comments`, {
       method: HttpMethod.POST,
       data
     });
