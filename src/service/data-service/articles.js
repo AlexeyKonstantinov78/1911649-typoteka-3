@@ -1,20 +1,18 @@
 'use strict';
 
-const Sequelize = require(`sequelize`);
 const Aliase = require(`../models/aliase`);
-
-// const {MAX_ID_LENGTH} = require(`../../constants`);
-// const {nanoid} = require(`nanoid`);
 
 class ArticlesService {
   constructor(sequelize) {
+    this._sequelize = sequelize;
     this._Article = sequelize.models.Article;
     this._Comment = sequelize.models.Comment;
     this._Category = sequelize.models.Category;
+    this._User = sequelize.models.User;
   }
 
   async create(articleData) {
-    const article = await this._Articler.create(articleData);
+    const article = await this._Article.create(articleData);
     await article.addCategories(articleData.categories);
     return article.get();
   }
@@ -26,28 +24,55 @@ class ArticlesService {
     return !!deletedRows;
   }
 
-  findOne(id) {
-    return this._Article.findByPk(id, {include: [Aliase.CATEGORIES]});
+  async findOne(articleId) {
+    const options = {
+      include: [Aliase.CATEGORIES],
+      where: [{id: articleId}]
+    };
+
+    return await this._Article.findOne(options);
   }
 
   async update(id, article) {
     const [affectedRows] = await this._Article.update(article, {
       where: {id}
     });
+
     return !!affectedRows;
   }
 
   async findAll(needComments) {
-    const include = [Aliase.CATEGORIES];
+    const include = [
+      Aliase.CATEGORIES,
+      {
+        model: this._User,
+        as: Aliase.USERS,
+        attributes: {
+          exclude: [`passwordHash`]
+        }
+      }
+    ];
 
     if (needComments) {
-      include.push(Aliase.COMMENTS);
+      include.push({
+        model: this._Comment,
+        as: Aliase.COMMENTS,
+        include: [
+          {
+            model: this._User,
+            as: Aliase.USERS,
+            attributes: {
+              exclude: [`passwordHash`]
+            }
+          }
+        ]
+      });
     }
 
     const articles = await this._Article.findAll({
       include,
       order: [
-        [`createdAt`, `DESC`]
+        [`id`, `DESC`]
       ]
     });
 

@@ -2,7 +2,15 @@
 
 const Sequelize = require(`sequelize`);
 
+require(`dotenv`).config();
+
 const {DB_NAME_TEST, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT} = process.env;
+
+const somethingIsNotDefined = [DB_NAME_TEST, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT].some((it) => it === undefined);
+
+if (somethingIsNotDefined) {
+  throw new Error(`One or more environmental variables are not defined`);
+}
 
 module.exports = new Sequelize(
     DB_NAME_TEST, DB_USER, DB_PASSWORD, {

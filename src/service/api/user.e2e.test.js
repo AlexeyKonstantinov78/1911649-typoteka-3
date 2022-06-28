@@ -7,8 +7,8 @@ const initDB = require(`../lib/init-db`);
 const mockDB = require(`../lib/mock-db`);
 const passwordUtils = require(`../lib/password`);
 
-const search = require(`./search`);
-const DataService = require(`../data-service/search`);
+const user = require(`./user`);
+const DataService = require(`../data-service/user`);
 const {HttpCode} = require(`../../constants`);
 
 const mockCategories = [
@@ -194,58 +194,74 @@ const createAPI = async () => {
   const app = express();
   app.use(express.json());
 
-  search(app, new DataService(mockDB));
+  user(app, new DataService(mockDB));
   return app;
 };
 
-describe(`API returns article based on search query`, () => {
+describe(`API refuses to create user if data is invalid`, () => {
+  const validUserData = {
+    name: `Сидор Сидоров`,
+    email: `sidorov@example.com`,
+    password: `sidorov`,
+    passwordRepeated: `sidorov`,
+    avatar: `sidorov.jpg`
+  };
 
-  test(`Status code 200`, async () => {
+  test(`Without any required property response code is 400`, async () => {
     const app = await createAPI();
-    const response = await request(app)
-      .get(`/search`)
-      .query({
-        query: `Ёлки. История деревьев`
-      });
-    expect(response.statusCode).toBe(HttpCode.OK);
+    for await (const key of Object.keys(validUserData)) {
+      const badUserData = {...validUserData};
+      delete badUserData[key];
+      await request(app)
+        .post(`/user`)
+        .send(badUserData)
+        .expect(HttpCode.BAD_REQUEST);
+    }
   });
 
-  test(`1 articles found`, async () => {
+  test(`When field type is wrong response code is 400`, async () => {
     const app = await createAPI();
-    const response = await request(app)
-      .get(`/search`)
-      .query({
-        query: `Ёлки. История деревьев`
-      });
-    expect(response.body.length).toBe(1);
+    const badUsers = [
+      {...validUserData, firstName: true},
+      {...validUserData, email: 1}
+    ];
+    for await (const badUserData of badUsers) {
+      await request(app)
+        .post(`/user`)
+        .send(badUserData)
+        .expect(HttpCode.BAD_REQUEST);
+    }
   });
 
-  test(`Article has correct id`, async () => {
+  test(`When field value is wrong response code is 400`, async () => {
     const app = await createAPI();
-    const response = await request(app)
-      .get(`/search`)
-      .query({
-        query: `Борьба с прокрастинацией`
-      });
-    expect(response.body[0].title).toBe(`Борьба с прокрастинацией`);
+    const badUsers = [
+      {...validUserData, password: `short`, passwordRepeated: `short`},
+      {...validUserData, email: `invalid`}
+    ];
+    for await (const badUserData of badUsers) {
+      await request(app)
+        .post(`/user`)
+        .send(badUserData)
+        .expect(HttpCode.BAD_REQUEST);
+    }
   });
 
-  test(`API returns code 404 if nothing is found`, async () => {
+  test(`When password and passwordRepeated are not equal, code is 400`, async () => {
     const app = await createAPI();
+    const badUserData = {...validUserData, passwordRepeated: `not sidorov`};
     await request(app)
-      .get(`/search`)
-      .query({
-        query: `Продам свою дуу`
-      })
-      .expect(HttpCode.NOT_FOUND);
+      .post(`/user`)
+      .send(badUserData)
+      .expect(HttpCode.BAD_REQUEST);
   });
 
-  test(`API returns 400 when query string is absent`, async () => {
+  test(`When email is already in use status code is 400`, async () => {
     const app = await createAPI();
+    const badUserData = {...validUserData, email: `ivanov@example.com`};
     await request(app)
-      .get(`/search`)
+      .post(`/user`)
+      .send(badUserData)
       .expect(HttpCode.BAD_REQUEST);
   });
 });
-
-

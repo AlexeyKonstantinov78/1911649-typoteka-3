@@ -7,6 +7,7 @@ const initDB = require(`../lib/init-db`);
 const {HttpCode} = require(`../../constants`);
 
 const mockDB = require(`../lib/mock-db`);
+const passwordUtils = require(`../lib/password`);
 
 const articles = require(`./articles`);
 const DataService = require(`../data-service/articles`);
@@ -23,93 +24,178 @@ const mockCategories = [
   `IT`
 ];
 
-const mockData = [{
-  "id": "aYnqTV",
-  "title": "Что такое золотое сечение",
-  "announce": "Простые ежедневные упражнения помогут достичь успеха.` Первая большая ёлка была установлена только в 1938 году. Как начать действовать? Для начала просто соберитесь. Достичь успеха помогут ежедневные повторения.",
-  "fullText": "Достичь успеха помогут ежедневные повторения. Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике. Ёлки — это не просто красивое дерево. Это прочная древесина. Он написал больше 30 хитов.",
+const mockUsers = [
+  {
+    name: `Иван Иванов`,
+    email: `ivanov@example.com`,
+    passwordHash: passwordUtils.hashSync(`ivanov`),
+    avatar: `avatar01.jpg`
+  },
+  {
+    name: `Пётр Петров`,
+    email: `petrov@example.com`,
+    passwordHash: passwordUtils.hashSync(`petrov`),
+    avatar: `avatar02.jpg`
+  }
+];
+
+const mockData = [
+  {
+  "title": "Рок — это протест",
+  "announce": "Процессор заслуживает особого внимания. Он обязательно понравится геймерам со стажем. Из под его пера вышло 8 платиновых альбомов. Ёлки — это не просто красивое дерево. Это прочная древесина. Он написал больше 30 хитов.",
+  "fullText": "Из под его пера вышло 8 платиновых альбомов. Игры и программирование разные вещи. Не стоит идти в программисты, если вам нравятся только игры. Вы можете достичь всего. Стоит только немного постараться и запастись книгами. Ёлки — это не просто красивое дерево. Это прочная древесина.",
   "comments": [{
-    "id": "hizjLw",
-    "text": "А где блок питания? Вы что?! В магазине дешевле. А сколько игр в комплекте?"
+    "user": `ivanov@example.com`,
+    "text": "С чем связана продажа? Почему так дешёво? А где блок питания? Почему в таком ужасном состоянии?"
   }, {
-    "id": "7cQDXE",
-    "text": "Почему в таком ужасном состоянии?"
+    "user": `petrov@example.com`,
+    "text": "Совсем немного..."
   }, {
-    "id": "PrRGOh",
-    "text": "Совсем немного... Продаю в связи с переездом. Отрываю от сердца."
-  }, {
-    "id": "V1pMd5",
-    "text": "А сколько игр в комплекте? Почему в таком ужасном состоянии? С чем связана продажа? Почему так дешёво?"
+    "user": `ivanov@example.com`,
+    "text": "А сколько игр в комплекте? Вы что?! В магазине дешевле."
   }],
-  "createdDate": "2022-2-29 8:11:59",
-  "category": ["Железо"]
+  "createdDate": "2022-2-27 3:0:25",
+  "user": `ivanov@example.com`,
+  "categories": ["Деревья"]
 }, {
-  "id": "MRFsQk",
-  "title": "Что такое золотое сечение",
-  "announce": "Программировать не настолько сложно, как об этом говорят. Собрать камни бесконечности легко, если вы прирожденный герой. Первая большая ёлка была установлена только в 1938 году. Помните, небольшое количество ежедневных упражнений лучше, чем один раз, но много.",
-  "fullText": "Достичь успеха помогут ежедневные повторения. Игры и программирование разные вещи. Не стоит идти в программисты, если вам нравятся только игры. Бороться с прокрастинацией несложно. Просто действуйте. Маленькими шагами. Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике.",
+  "title": "Самый лучший музыкальный альбом этого года",
+  "announce": "Золотое сечение — соотношение двух величин, гармоническая пропорция. Собрать камни бесконечности легко, если вы прирожденный герой. Достичь успеха помогут ежедневные повторения. Бороться с прокрастинацией несложно. Просто действуйте. Маленькими шагами.",
+  "fullText": "Процессор заслуживает особого внимания. Он обязательно понравится геймерам со стажем. Помните, небольшое количество ежедневных упражнений лучше, чем один раз, но много. Ёлки — это не просто красивое дерево. Это прочная древесина. Из под его пера вышло 8 платиновых альбомов.",
   "comments": [{
-    "id": "XeHiSz",
-    "text": "С чем связана продажа? Почему так дешёво? А где блок питания?"
+    "user": `petrov@example.com`,
+    "text": "Вы что?! В магазине дешевле. Почему в таком ужасном состоянии? С чем связана продажа? Почему так дешёво?"
   }, {
-    "id": "r9GM4Y",
-    "text": "Совсем немного... Почему в таком ужасном состоянии? Вы что?! В магазине дешевле."
+    "user": `petrov@example.com`,
+    "text": "Продаю в связи с переездом. Отрываю от сердца."
+  }, {
+    "user": `petrov@example.com`,
+    "text": "Почему в таком ужасном состоянии? А сколько игр в комплекте?"
   }],
-  "createdDate": "2022-2-21 22:8:47",
-  "category": ["За жизнь"]
+  "createdDate": "2022-2-26 22:43:20",
+  "user": `ivanov@example.com`,
+  "categories": ["Без рамки"]
 }, {
-  "id": "caenj9",
+  "title": "Как достигнуть успеха не вставая с кресла",
+  "announce": "Рок-музыка всегда ассоциировалась с протестами. Так ли это на самом деле? Он написал больше 30 хитов. Программировать не настолько сложно, как об этом говорят. Простые ежедневные упражнения помогут достичь успеха.`",
+  "fullText": "Собрать камни бесконечности легко, если вы прирожденный герой. Простые ежедневные упражнения помогут достичь успеха.` Из под его пера вышло 8 платиновых альбомов. Программировать не настолько сложно, как об этом говорят.",
+  "comments": [{
+    "user": `petrov@example.com`,
+    "text": "Оплата наличными или перевод на карту? Почему в таком ужасном состоянии? А сколько игр в комплекте?"
+  }, {
+    "user": `petrov@example.com`,
+    "text": "А сколько игр в комплекте? Неплохо, но дорого. Совсем немного..."
+  }, {
+    "user": `petrov@example.com`,
+    "text": "Оплата наличными или перевод на карту? Почему в таком ужасном состоянии? Вы что?! В магазине дешевле."
+  }],
+  "createdDate": "2022-2-19 23:23:3",
+  "user": `ivanov@example.com`,
+  "categories": ["Без рамки"]
+}, {
   "title": "Борьба с прокрастинацией",
-  "announce": "Собрать камни бесконечности легко, если вы прирожденный герой. Он написал больше 30 хитов. Альбом стал настоящим открытием года. Мощные гитарные рифы и скоростные соло-партии не дадут заскучать. Из под его пера вышло 8 платиновых альбомов.",
-  "fullText": "Как начать действовать? Для начала просто соберитесь. Собрать камни бесконечности легко, если вы прирожденный герой. Программировать не настолько сложно, как об этом говорят. Игры и программирование разные вещи. Не стоит идти в программисты, если вам нравятся только игры.",
+  "announce": "Помните, небольшое количество ежедневных упражнений лучше, чем один раз, но много. Этот смартфон — настоящая находка. Большой и яркий экран, мощнейший процессор — всё это в небольшом гаджете. Процессор заслуживает особого внимания. Он обязательно понравится геймерам со стажем. Простые ежедневные упражнения помогут достичь успеха.`",
+  "fullText": "Он написал больше 30 хитов. Ёлки — это не просто красивое дерево. Это прочная древесина. Рок-музыка всегда ассоциировалась с протестами. Так ли это на самом деле? Программировать не настолько сложно, как об этом говорят.",
   "comments": [{
-    "id": "_LLc0v",
-    "text": "С чем связана продажа? Почему так дешёво?"
+    "user": `ivanov@example.com`,
+    "text": "Почему в таком ужасном состоянии? С чем связана продажа? Почему так дешёво? Оплата наличными или перевод на карту?"
   }, {
-    "id": "POfli1",
-    "text": "Вы что?! В магазине дешевле. Продаю в связи с переездом. Отрываю от сердца. Оплата наличными или перевод на карту?"
+    "user": `ivanov@example.com`,
+    "text": "Оплата наличными или перевод на карту? А сколько игр в комплекте?"
   }, {
-    "id": "dBby4I",
-    "text": "С чем связана продажа? Почему так дешёво?"
-  }, {
-    "id": "rOLzwR",
-    "text": "Вы что?! В магазине дешевле. Совсем немного... А сколько игр в комплекте?"
+    "user": `ivanov@example.com`,
+    "text": "Совсем немного... А где блок питания? Вы что?! В магазине дешевле."
   }],
-  "createdDate": "2022-2-27 16:1:13",
-  "category": ["Железо"]
+  "createdDate": "2022-2-22 16:35:5",
+  "user": `petrov@example.com`,
+  "categories": ["Кино"]
 }, {
-  "id": "L8BLEb",
-  "title": "Как собрать камни бесконечности",
-  "announce": "Вы можете достичь всего. Стоит только немного постараться и запастись книгами. Рок-музыка всегда ассоциировалась с протестами. Так ли это на самом деле? Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике. Достичь успеха помогут ежедневные повторения.",
-  "fullText": "Бороться с прокрастинацией несложно. Просто действуйте. Маленькими шагами. Ёлки — это не просто красивое дерево. Это прочная древесина. Достичь успеха помогут ежедневные повторения. Простые ежедневные упражнения помогут достичь успеха.`",
-  "comments": [{
-    "id": "WmwfZR",
-    "text": "Продаю в связи с переездом. Отрываю от сердца. А где блок питания? Почему в таком ужасном состоянии?"
-  }],
-  "createdDate": "2022-2-25 3:17:2",
-  "category": ["Программирование"]
-}, {
-  "id": "oHfTeu",
   "title": "Учим HTML и CSS",
-  "announce": "Он написал больше 30 хитов. Вы можете достичь всего. Стоит только немного постараться и запастись книгами. Первая большая ёлка была установлена только в 1938 году. Рок-музыка всегда ассоциировалась с протестами. Так ли это на самом деле?",
-  "fullText": "Как начать действовать? Для начала просто соберитесь. Игры и программирование разные вещи. Не стоит идти в программисты, если вам нравятся только игры. Рок-музыка всегда ассоциировалась с протестами. Так ли это на самом деле? Золотое сечение — соотношение двух величин, гармоническая пропорция.",
+  "announce": "Игры и программирование разные вещи. Не стоит идти в программисты, если вам нравятся только игры. Из под его пера вышло 8 платиновых альбомов. Золотое сечение — соотношение двух величин, гармоническая пропорция. Помните, небольшое количество ежедневных упражнений лучше, чем один раз, но много.",
+  "fullText": "Альбом стал настоящим открытием года. Мощные гитарные рифы и скоростные соло-партии не дадут заскучать. Процессор заслуживает особого внимания. Он обязательно понравится геймерам со стажем. Игры и программирование разные вещи. Не стоит идти в программисты, если вам нравятся только игры. Этот смартфон — настоящая находка. Большой и яркий экран, мощнейший процессор — всё это в небольшом гаджете.",
   "comments": [{
-    "id": "7kCDm6",
-    "text": "Неплохо, но дорого. Вы что?! В магазине дешевле."
+    "user": `petrov@example.com`,
+    "text": "Оплата наличными или перевод на карту?"
   }],
-  "createdDate": "2022-2-29 7:47:6",
-  "category": ["Кино"]
+  "createdDate": "2022-2-27 2:27:25",
+  "user": `ivanov@example.com`,
+  "categories": ["Деревья"]
+}, {
+  "title": "Борьба с прокрастинацией",
+  "announce": "Процессор заслуживает особого внимания. Он обязательно понравится геймерам со стажем. Первая большая ёлка была установлена только в 1938 году. Достичь успеха помогут ежедневные повторения. Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике.",
+  "fullText": "Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике. Ёлки — это не просто красивое дерево. Это прочная древесина. Рок-музыка всегда ассоциировалась с протестами. Так ли это на самом деле? Собрать камни бесконечности легко, если вы прирожденный герой.",
+  "comments": [{
+    "user": `petrov@example.com`,
+    "text": "С чем связана продажа? Почему так дешёво?"
+  }],
+  "createdDate": "2022-2-20 6:6:27",
+  "user": `ivanov@example.com`,
+  "categories": ["Программирование"]
+}, {
+  "title": "Ёлки. История деревьев",
+  "announce": "Он написал больше 30 хитов. Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике. Как начать действовать? Для начала просто соберитесь. Этот смартфон — настоящая находка. Большой и яркий экран, мощнейший процессор — всё это в небольшом гаджете.",
+  "fullText": "Бороться с прокрастинацией несложно. Просто действуйте. Маленькими шагами. Ёлки — это не просто красивое дерево. Это прочная древесина. Достичь успеха помогут ежедневные повторения. Первая большая ёлка была установлена только в 1938 году.",
+  "comments": [{
+    "user": `ivanov@example.com`,
+    "text": "Неплохо, но дорого. А сколько игр в комплекте? Совсем немного..."
+  }, {
+    "user": `ivanov@example.com`,
+    "text": "С чем связана продажа? Почему так дешёво? Оплата наличными или перевод на карту? Неплохо, но дорого."
+  }],
+  "createdDate": "2022-2-27 0:4:7",
+  "user": `petrov@example.com`,
+  "categories": ["Без рамки"]
+}, {
+  "title": "Как собрать камни бесконечности",
+  "announce": "Первая большая ёлка была установлена только в 1938 году. Бороться с прокрастинацией несложно. Просто действуйте. Маленькими шагами. Простые ежедневные упражнения помогут достичь успеха.` Как начать действовать? Для начала просто соберитесь.",
+  "fullText": "Как начать действовать? Для начала просто соберитесь. Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике. Процессор заслуживает особого внимания. Он обязательно понравится геймерам со стажем. Ёлки — это не просто красивое дерево. Это прочная древесина.",
+  "comments": [{
+    "user": `petrov@example.com`,
+    "text": "Продаю в связи с переездом. Отрываю от сердца. С чем связана продажа? Почему так дешёво?"
+  }, {
+    "user": `petrov@example.com`,
+    "text": "С чем связана продажа? Почему так дешёво?"
+  }],
+  "createdDate": "2022-2-21 21:52:11",
+  "user": `ivanov@example.com`,
+  "categories": ["За жизнь"]
+}, {
+  "title": "Как начать программировать",
+  "announce": "Золотое сечение — соотношение двух величин, гармоническая пропорция. Альбом стал настоящим открытием года. Мощные гитарные рифы и скоростные соло-партии не дадут заскучать. Ёлки — это не просто красивое дерево. Это прочная древесина. Простые ежедневные упражнения помогут достичь успеха.`",
+  "fullText": "Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике. Из под его пера вышло 8 платиновых альбомов. Альбом стал настоящим открытием года. Мощные гитарные рифы и скоростные соло-партии не дадут заскучать. Собрать камни бесконечности легко, если вы прирожденный герой.",
+  "comments": [{
+    "user": `ivanov@example.com`,
+    "text": "А где блок питания? С чем связана продажа? Почему так дешёво? Неплохо, но дорого."
+  }],
+  "createdDate": "2022-2-23 23:15:35",
+  "user": `petrov@example.com`,
+  "categories": ["Железо"]
+}, {
+  "title": "Борьба с прокрастинацией",
+  "announce": "Как начать действовать? Для начала просто соберитесь. Достичь успеха помогут ежедневные повторения. Помните, небольшое количество ежедневных упражнений лучше, чем один раз, но много. Программировать не настолько сложно, как об этом говорят.",
+  "fullText": "Альбом стал настоящим открытием года. Мощные гитарные рифы и скоростные соло-партии не дадут заскучать. Рок-музыка всегда ассоциировалась с протестами. Так ли это на самом деле? Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике. Золотое сечение — соотношение двух величин, гармоническая пропорция.",
+  "comments": [{
+    "user": `petrov@example.com`,
+    "text": "Неплохо, но дорого."
+  }, {
+    "user": `petrov@example.com`,
+    "text": "Вы что?! В магазине дешевле."
+  }, {
+    "user": `petrov@example.com`,
+    "text": "Неплохо, но дорого. С чем связана продажа? Почему так дешёво?"
+  }],
+  "createdDate": "2022-2-21 20:46:10",
+  "user": `ivanov@example.com`,
+  "categories": ["IT"]
 }];
 
 const createAPI = async () => {
 
-  await initDB(mockDB, {categories: mockCategories, articles: mockData});
+  await initDB(mockDB, {articles: mockData, categories: mockCategories, users: mockUsers});
 
   const app = express();
   app.use(express.json());
-  const cloneData = JSON.parse(JSON.stringify(mockData));
 
-  articles(app, new DataService(cloneData), new CommentService(cloneData));
+  articles(app, new DataService(mockDB), new CommentService(mockDB));
   return app;
 };
 
@@ -121,16 +207,16 @@ describe(`API returns a list of all articles`, () => {
     expect(response.statusCode).toBe(HttpCode.OK);
   });
 
-  test(`Returns a list of 5 offers`, async () => {
+  test(`Returns a list of 10 offers`, async () => {
     const app = await createAPI();
     const response = await request(app).get(`/articles`);
-    expect(response.body.length).toBe(5);
+    expect(response.body.length).toBe(10);
   });
 
-  test(`First offer's title equals "Куплю антиквариат"`, async () => {
+  test(`First offer's title equals "Борьба с прокрастинацией"`, async () => {
     const app = await createAPI();
     const response = await request(app).get(`/articles`);
-    expect(response.body[0].title).toBe(`Что такое золотое сечение`);
+    expect(response.body[0].title).toBe(`Борьба с прокрастинацией`);
   });
 
   test(`When field type is wrong response code is 400`, async () => {
@@ -148,18 +234,18 @@ describe(`API returns a list of all articles`, () => {
   });
 
   test(`When field value is wrong response code is 400`, async () => {
+    const app = await createAPI();
     const badOffers = [
       {...mockData, title: `too short`},
       {...mockData, categories: []}
     ];
     for await (const badOffer of badOffers) {
       await request(app)
-        .post(`/offers`)
+        .post(`/articles`)
         .send(badOffer)
         .expect(HttpCode.BAD_REQUEST);
     }
   });
-});
 });
 
 describe(`API returns an articles with given id`, () => {
@@ -170,22 +256,20 @@ describe(`API returns an articles with given id`, () => {
     expect(response.statusCode).toBe(HttpCode.OK);
   });
 
-  test(`Offer's title is "Что такое золотое сечение"`, async () => {
+  test(`Offer's title is "Рок — это протест"`, async () => {
     const app = await createAPI();
     const response = await request(app).get(`/articles/1`);
-    expect(response.body.title).toBe(`Что такое золотое сечение`);
+    expect(response.body.title).toBe(`Рок — это протест`);
   });
 });
 
 describe(`API creates an article if data is valid`, () => {
   const newArticle = {
     "title": "Новая публикация",
-    "announce": "Текст публикации",
+    "announce": "Текст публикации Должен быть 30",
     "fullText": "Текст публикации полный",
-    "createdDate": "2022-2-26 22:43:20",
-    "category": [
-      "Без рубрики"
-    ]};
+    "categories": [7]
+  };
 
   test(`Status code 201`, async () => {
     const app = await createAPI();
@@ -195,20 +279,12 @@ describe(`API creates an article if data is valid`, () => {
     expect(response.statusCode).toBe(HttpCode.CREATED);
   });
 
-  test(`Returns article created`, async () => {
-    const app = await createAPI();
-    const response = await request(app)
-      .post(`/articles`)
-      .send(newArticle);
-    expect(response.body).toEqual(expect.objectContaining(newArticle));
-  });
-
   test(`Articles count is changed`, async () => {
     const app = await createAPI();
 
-    request(app)
+    return await request(app)
       .get(`/articles`)
-      .expect((res) => expect(res.body.length).toBe(6));
+      .expect((res) => expect(res.body.length).toBe(10));
   });
 });
 
@@ -224,7 +300,7 @@ describe(`API refuses to create an articles if data is invalid`, () => {
 
   test(`Without any required property response code is 400`, async () => {
     const app = await createAPI();
-    for (const key of Object.keys(newArticles)) {
+    for await (const key of Object.keys(newArticles)) {
       const badOffer = {...newArticles};
       delete badOffer[key];
       await request(app)
@@ -239,26 +315,30 @@ describe(`API changes existent article`, () => {
   const newOffer =
     {
       "title": "Новая публикация",
-      "announce": "Текст публикации",
+      "announce": "Текст публикации больше 30 символов",
       "fullText": "Текст публикации полный",
-      "createdDate": "2022-2-26 22:43:20",
-      "category": [
-        "Без рубрики"
+      "picture": "non",
+      "categories": [
+        7
       ]
     };
 
   test(`Status code 200`, async () => {
     const app = await createAPI();
     const response = await request(app)
-      .put(`/articles/oHfTeu`)
+      .put(`/articles/10`)
       .send(newOffer);
     expect(response.statusCode).toBe(HttpCode.OK);
   });
 
   test(`Offer is really changed`, async () => {
     const app = await createAPI();
-    request(app)
-      .get(`/articles/oHfTeu`)
+    await request(app)
+      .put(`/articles/10`)
+      .send(newOffer);
+
+    await request(app)
+      .get(`/articles/10`)
       .expect((res) => expect(res.body.title).toBe(`Новая публикация`));
   });
 });
@@ -268,16 +348,14 @@ test(`API returns status code 404 when trying to change non-existent articles`, 
 
   const validOffer = {
     "title": "Новая публикация2",
-    "announce": "Текст публикации2",
+    "announce": "Текст публикации должен быть больше 30 символов",
     "fullText": "Текст публикации полный2",
-    "createdDate": "2022-2-26 22:43:20",
-    "category": [
-      "Без рубрики2"
-    ]
+    "picture": "non",
+    "categories": [1]
   };
 
-  return request(app)
-    .put(`/articles/NOEXST`)
+  return await request(app)
+    .put(`/articles/20`)
     .send(validOffer)
     .expect(HttpCode.NOT_FOUND);
 });
@@ -293,8 +371,8 @@ test(`API returns status code 400 when trying to change an articles with invalid
     type: `нет поля sum`
   };
 
-  return request(app)
-    .put(`/articles/NOEXST`)
+  return await request(app)
+    .put(`/articles/20`)
     .send(invalidOffer)
     .expect(HttpCode.BAD_REQUEST);
 });
@@ -304,54 +382,62 @@ describe(`API correctly deletes an articles`, () => {
   test(`Status code 200`, async () => {
     const app = await createAPI();
     const response = await request(app)
-      .delete(`/articles/aYnqTV`);
+      .delete(`/articles/1`);
     expect(response.statusCode).toBe(HttpCode.OK);
   });
 
-  test(`Returns deleted offer`, async () => {
+  test(`Returns deleted articles`, async () => {
     const app = await createAPI();
     const response = await request(app)
-      .delete(`/articles/aYnqTV`);
-    expect(response.body.id).toBe(`aYnqTV`);
+      .delete(`/articles/1`);
+    expect(response.statusCode).toBe(HttpCode.OK);
   });
 
-  test(`Articles count is 4 now`, async () => {
+  test(`Articles count is 10 now`, async () => {
     const app = await createAPI();
-    request(app)
+    return await request(app)
       .get(`/articles`)
-      .expect((res) => expect(res.body.length).toBe(5));
+      .expect((res) => expect(res.body.length).toBe(10));
   });
 });
 
 test(`API refuses to delete non-existent articles`, async () => {
   const app = await createAPI();
 
-  return request(app)
-    .delete(`/articles/NOEXST`)
+  return await request(app)
+    .delete(`/articles/11`)
     .expect(HttpCode.NOT_FOUND);
 });
 
 test(`Status code 200 article comments`, async () => {
   const app = await createAPI();
 
-  return request(app)
-    .get(`/articles/caenj9/comments/`)
+  return await request(app)
+    .get(`/articles/1/comments/`)
     .expect(HttpCode.OK);
 });
 
 test(`Status code 404 not found article comments`, async () => {
   const app = await createAPI();
 
-  return request(app)
-    .get(`/articles/caenj/comments/`)
+  return await request(app)
+    .get(`/articles/11/comments`)
     .expect(HttpCode.NOT_FOUND);
+});
+
+test(`Comments count is 3 now`, async () => {
+  const app = await createAPI();
+
+  return await request(app)
+    .get(`/articles/1/comments`)
+    .expect((res) => expect(res.body.length).toBe(3));
 });
 
 test(`API refuses to create a comment to non-existent article and returns status code 404`, async () => {
   const app = await createAPI();
 
-  return request(app)
-    .post(`/articles/NOEXST/comments`)
+  return await request(app)
+    .post(`/articles/20/comments`)
     .send({
       text: `Неважно`
     })
@@ -361,7 +447,17 @@ test(`API refuses to create a comment to non-existent article and returns status
 test(`API refuses to delete non-existent comment`, async () => {
   const app = await createAPI();
 
-  return request(app)
-    .delete(`/articles/aYnqTV/comments/dfgfgd`)
+  return await request(app)
+    .delete(`/articles/1/comments/20`)
     .expect(HttpCode.NOT_FOUND);
 });
+
+test(`API refuses to delete a comment to non-existent offer`, async () => {
+
+  const app = await createAPI();
+
+  return await request(app)
+    .delete(`/offers/20/comments/1`)
+    .expect(HttpCode.NOT_FOUND);
+});
+

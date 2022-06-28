@@ -1,18 +1,15 @@
 'use strict';
 
 const sequelize = require(`../lib/sequelize`);
-const defineModels = require(`../models`);
-const Aliase = require(`../models/aliase`);
 
 const {getLogger} = require(`../lib/logger`);
 const logger = getLogger({name: `filldb`});
+const passwordUtils = require(`../lib/password`);
 const initDatabase = require(`../lib/init-db`);
 
 const {getRandomInt, shuffle} = require(`../../utils`);
 const {MAX_ID_LENGTH, ExitCode} = require(`../../constants`);
 const fs = require(`fs`).promises;
-// const chalk = require(`chalk`);
-// const {nanoid} = require(`nanoid`);
 
 const DEFAULT_COUNT = 1; // по умолчанию 1 публикация
 const MAX_COMMENTS = 4;
@@ -63,7 +60,7 @@ const getRandomSubarray = (items) => {
   return result;
 };
 
-const generateOffers = (count, titles, sentences, categories, comments) => (
+const generateOffers = (count, titles, sentences, categories, comments, users) => (
   Array(count).fill({}).map(() => ({
     title: titles[getRandomInt(0, titles.length - 1)],
     announce: shuffle(sentences).slice(1, 5).join(` `),
@@ -71,6 +68,7 @@ const generateOffers = (count, titles, sentences, categories, comments) => (
     picture: ``,
     comments: generateComments(getRandomInt(1, MAX_COMMENTS), comments),
     createdDate: generateDate(),
+    user: users[getRandomInt(0, users.length - 1)].email,
     categories: getRandomSubarray(categories)
   }))
 );
@@ -88,24 +86,31 @@ module.exports = {
 
     logger.info(`Установлено соединение с базой данных`);
 
-    const {Category, Article} = defineModels(sequelize);
-
     await sequelize.sync({force: true});
 
     const titles = await readFile(FILE_TITLES_PATH);
     const sentences = await readFile(FILE_SENTENCES_PATH);
     const categories = await readFile(FILE_CATEGORIES_PATH);
     const comments = await readFile(FILE_COMMENTS_PATH);
-
-    const categoryModels = await Category.bulkCreate(
-        categories.map((item) => ({name: item}))
-    );
+    const users = [
+      {
+        name: `Иван Иванов`,
+        email: `ivanov@example.com`,
+        passwordHash: await passwordUtils.hash(`ivanov`),
+        avatar: `avatar01.jpg`
+      },
+      {
+        name: `Пётр Петров`,
+        email: `petrov@example.com`,
+        passwordHash: await passwordUtils.hash(`petrov`),
+        avatar: `avatar02.jpg`
+      }
+    ];
 
     const [count] = args;
     const countArticle = Number.parseInt(count, 10) || DEFAULT_COUNT;
+    const articles = generateOffers(countArticle, titles, sentences, categories, comments, users);
 
-    const articles = generateOffers(countArticle, titles, categoryModels, sentences, comments);
-
-    return initDatabase(sequelize, {categories, articles});
+    return initDatabase(sequelize, {articles, categories, users});
   }
 };

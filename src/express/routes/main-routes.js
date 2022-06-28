@@ -3,7 +3,9 @@
 const {Router} = require(`express`);
 const mainRouter = new Router();
 const api = require(`../api`).getAPI();
+const upload = require(`../middlewares/upload`);
 const {OFFERS_PER_PAGE} = require(`../../constants`);
+const {prepareErrors} = require(`../../utils`);
 
 mainRouter.get(`/`, async (req, res) => {
   // получаем номер страницы
@@ -28,6 +30,25 @@ mainRouter.get(`/`, async (req, res) => {
 });
 
 mainRouter.get(`/register`, (req, res) => res.render(`sign-up`));
+
+mainRouter.post(`/register`, upload.single(`avatar`), async (req, res) => {
+  const {body, file} = req;
+  const userData = {
+    avatar: file ? file.filename : ``,
+    name: body[`user-name`],
+    email: body[`user-email`],
+    password: body[`user-password`],
+    passwordRepeated: body[`user-password-again`]
+  };
+
+  try {
+    await api.createUser(userData);
+    res.redirect(`/login`);
+  } catch (errors) {
+    const validationMessages = prepareErrors(errors);
+    res.render(`sign-up`, {validationMessages});
+  }
+});
 
 mainRouter.get(`/login`, (req, res) => res.render(`login`));
 
