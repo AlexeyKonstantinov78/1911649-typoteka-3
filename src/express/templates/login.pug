@@ -2,14 +2,17 @@ extends layout.pug
 
 block content
   main
-    h1.visually-hidden Регистрация пользователя
+    a.login__link(href="/register")
+      h1.visually-hidden Регистрация пользователя
     section
       div.popup.popup--registration.popup--anti
         a.popup__button.button.button--popup-close(aria-label="Закрыть окно") Закрыть окно
         h2.popup__title Войти
         div.popup__form.form.form--log-in
-          form(action="#" method="get")
-            div.form__field: label: input(type="email" name="email" placeholder="Электронная почта" required="")
-            div.form__field: label: input(type="password" name="password" placeholder="Пароль" required="")
-            p.form__error-message Некоторая ошибка произошла, беда!
+          form(action="/login" method="post")
+            div.form__field: label: input(type="email" name="user-email" placeholder="Электронная почта" required="")
+            span Обязательное поле
+            div.form__field: label: input(type="password" name="user-password" placeholder="Пароль" required="")
+            span Обязательное поле
+            +insertErrorMessage(validationMessages)
             button.form__submit-btn.form__submit-btn--log-in.button.button--colored(type="submit") Войти

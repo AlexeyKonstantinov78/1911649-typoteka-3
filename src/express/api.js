@@ -56,8 +56,15 @@ class API {
 
   async createOffer(data) {
     return await this._load(`/articles`, {
-      method: `POST`,
+      method: HttpMethod.POST,
       data
+    });
+  }
+
+  async auth(email, password) {
+    return this._load(`/user/auth`, {
+      method: HttpMethod.POST,
+      data: {email, password}
     });
   }
 }

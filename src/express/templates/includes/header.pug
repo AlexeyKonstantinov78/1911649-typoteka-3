@@ -7,5 +7,10 @@ header.header
       li.header__list-item
         a(class="header__registration", href="/register") Регистрация
       li.header__list-item
-        a(class="header__registration", href="/login") Вход с паролем
+        if user
+          a.header__avatar.avatar(href="#")
+            img(src=`/img/${user.avatar}` alt="Аватар пользователя")
+          a(href="/logout") Выход
+        else
+          a(class="header__registration", href="/login") Вход с паролем
   a(class="header__search button button--search", href="/search", aria-label="поиск по сайту")
