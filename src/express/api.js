@@ -3,7 +3,7 @@
 const axios = require(`axios`);
 const {getLogger} = require(`../service/lib/logger`);
 const logger = getLogger({name: `api http`});
-const {HttpMethod} = require(`../../constants`);
+const {HttpMethod} = require(`../constants`);
 
 const TIMEOUT = 1000;
 

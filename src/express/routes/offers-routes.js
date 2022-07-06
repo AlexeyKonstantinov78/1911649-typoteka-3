@@ -30,7 +30,7 @@ const getEditOfferData = async (offerId) => {
       api.getCategories()
     ]);
     return [offer, categories];
-  } catch (error) {
+  } catch (err) {
     const error = err.message;
     logger.info(error);
     res.render(`./post/post-edit`, {error});
@@ -105,7 +105,7 @@ offersRouter.post(`/add`, auth, upload.single(`avatar`), csrfProtection, async (
 
     res.render(`./post/post`, {categories, user, validationMessages, csrfToken: req.csrfToken()});
   }
-};
+});
 
 offersRouter.get(`/:id`, csrfProtection, async (req, res) => {
   const {user} = req.session;
